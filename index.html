@@ -371,8 +371,8 @@ function money(n){return '$'+(Math.round(n*100)/100).toFixed(2).replace(/\.00$/,
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function unit(n){return n>=10?P('price.ten_plus'):n>=5?P('price.five_to_nine'):n>=2?P('price.two_to_four'):P('price.one')}
 function zoneFee(z){return [0,P('travel.tier1_fee'),P('travel.tier2_fee')][z]}
-function api(params){var u=API+'?'+Object.keys(params).map(function(k){return k+'='+encodeURIComponent(params[k])}).join('&');return fetch(u).then(function(r){return r.json()}).then(function(d){if(!d.ok)throw new Error(d.error||'Error');return d})}
-function post(body){return fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}).then(function(r){return r.json()})}
+function api(params,tries){tries=tries||0;var u=API+'?'+Object.keys(params).map(function(k){return k+'='+encodeURIComponent(params[k])}).join('&');return fetch(u).then(function(r){return r.text()}).then(function(t){var d;try{d=JSON.parse(t)}catch(e){if(tries<2)return new Promise(function(ok){setTimeout(ok,1200)}).then(function(){return api(params,tries+1)});throw new Error('Our booking system is busy — please try again in a minute.')}if(!d.ok)throw new Error(d.error||'Error');return d})}
+function post(body){return fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}).then(function(r){return r.text()}).then(function(t){try{return JSON.parse(t)}catch(e){return {ok:false,unsure:true,error:'We may have received your request but could not confirm it. Please check your email (and spam) in 2 minutes before trying again, or call 0455 585 556.'}}})}
 function me(){try{return localStorage.getItem('ss_email')||''}catch(e){return ''}}
 function track(ev,detail){if(API)post({action:'event',email:me(),event:ev,detail:detail||location.hash}).catch(function(){})}
 
