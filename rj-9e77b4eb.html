@@ -1,133 +1,392 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>Smart Start Admin</title><link rel="icon" href="data:,">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#111316">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Smart Start">
+<title>Smart Start Admin</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23FFD400'/%3E%3Ctext x='32' y='48' font-family='Arial' font-weight='900' font-size='46' text-anchor='middle' fill='%23111'%3EL%3C/text%3E%3C/svg%3E">
 <style>
-:root{--y:#FFD400;--k:#111316;--m:#5d636d;--l:#e6e6e0;--s:#f6f6f2;--g:#1f9d55;--r:#c0392b}
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif;background:var(--s);color:var(--k);font-size:15px}
-header{position:sticky;top:0;z-index:5;background:var(--k);color:#fff;padding:12px 14px;display:flex;align-items:center;gap:10px}
-.lp{width:30px;height:30px;border-radius:6px;background:var(--y);color:var(--k);display:grid;place-items:center;font-weight:900;border:2px solid #fff}
-header b{flex:1}header button{background:none;border:1px solid #555;color:#fff;border-radius:8px;padding:6px 10px}
-nav{display:flex;overflow-x:auto;gap:6px;padding:10px;background:#fff;border-bottom:1px solid var(--l);position:sticky;top:54px;z-index:4}
-nav button{flex-shrink:0;border:1.5px solid var(--l);background:#fff;border-radius:999px;padding:8px 13px;font-weight:600;font-size:14px}
-nav button.on{background:var(--k);color:var(--y);border-color:var(--k)}
-main{padding:12px;max-width:760px;margin:0 auto}
-.card{background:#fff;border:1px solid var(--l);border-radius:14px;padding:14px;margin-bottom:12px}
-.card h3{margin:0 0 4px;font-size:16px}.muted{color:var(--m);font-size:13px}
+:root{--y:#FFD400;--k:#111316;--m:#5d636d;--l:#e4e4de;--s:#f4f4ef;--g:#1f9d55;--r:#c0392b;--b:#2f7cf6}
+*{box-sizing:border-box}html,body{margin:0}.hide{display:none!important}
+body{font:16px/1.45 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;background:var(--s);color:var(--k);-webkit-text-size-adjust:100%}
+button{font:inherit;cursor:pointer;color:inherit}
+header{position:sticky;top:0;z-index:30;background:var(--k);color:#fff;display:flex;align-items:center;gap:10px;padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top));height:60px}
+.lp{width:32px;height:32px;border-radius:7px;background:var(--y);color:var(--k);display:grid;place-items:center;font-weight:900;border:2px solid #fff;flex:0 0 auto}
+header .t{flex:1;font-weight:800;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header button{background:#24272d;border:0;color:#fff;border-radius:10px;min-width:42px;height:40px;font-size:17px}
+main{padding:14px 12px calc(96px + env(safe-area-inset-bottom));max-width:760px;margin:0 auto}
+#bottom{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--l);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+#bottom button{flex:1;border:0;background:none;padding:8px 2px 9px;font-size:11.5px;color:var(--m);display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
+#bottom button i{font-style:normal;font-size:22px;line-height:1}
+#bottom button.on{color:var(--k);font-weight:800}
+.dot{position:absolute;top:3px;left:calc(50% + 6px);background:var(--r);color:#fff;border-radius:999px;font-size:11px;min-width:18px;height:18px;line-height:18px;padding:0 5px;font-weight:700}
+#side{display:none}
+@media(min-width:900px){
+  #bottom{display:none}
+  #side{display:block;position:fixed;top:60px;left:0;bottom:0;width:230px;background:#fff;border-right:1px solid var(--l);padding:12px;overflow:auto;z-index:20}
+  #side button{display:flex;width:100%;gap:12px;align-items:center;border:0;background:none;padding:11px 12px;border-radius:12px;font-size:15px;text-align:left;position:relative}
+  #side button:hover{background:var(--s)}#side button.on{background:var(--k);color:var(--y);font-weight:700}
+  #side .dot{position:static;margin-left:auto}
+  main{margin-left:230px;max-width:none;padding:22px 30px 40px}
+  main>.wrap{max-width:900px}
+}
+h2{font-size:21px;margin:4px 0 12px}h3{margin:0;font-size:17px}
+.muted{color:var(--m);font-size:14px}.small{font-size:13px}
+.card{background:#fff;border:1px solid var(--l);border-radius:18px;padding:15px;margin-bottom:12px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.sp{justify-content:space-between}
-.btn{border:none;border-radius:10px;padding:10px 12px;font-weight:700;font-size:14px;background:var(--s);color:var(--k);text-decoration:none;display:inline-block}
-.b-y{background:var(--y)}.b-k{background:var(--k);color:#fff}.b-g{background:var(--g);color:#fff}.b-r{background:#fde8e6;color:var(--r)}
-.pill{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--s)}
+.btn{border:0;border-radius:12px;min-height:46px;padding:10px 14px;font-weight:700;font-size:15px;background:#ebebe5;color:var(--k);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-align:center;line-height:1.2}
+.btn:active{transform:scale(.98)}
+.b-y{background:var(--y)}.b-k{background:var(--k);color:#fff}.b-g{background:var(--g);color:#fff}.b-r{background:#fde8e6;color:var(--r)}.b-o{background:#fff;border:1.5px solid var(--l)}.b-b{background:var(--b);color:#fff}
+.btn[disabled]{opacity:.4;pointer-events:none}.full{width:100%}
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+@media(min-width:600px){.acts{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}}
+.acts .btn{font-size:14px;padding:8px 6px;flex-direction:column;gap:2px}.acts .btn i{font-style:normal;font-size:19px}
+.pill{font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--s);white-space:nowrap}
 .Pending{background:#fff2b3}.Confirmed{background:#d9f5e4;color:#11663a}.Completed{background:#e3ecff;color:#2848a8}.Cancelled,.Declined,.No-show{background:#fde8e6;color:var(--r)}
-input,select,textarea{width:100%;padding:10px;border:1.5px solid var(--l);border-radius:10px;font:inherit;background:#fff}
-label{font-size:13px;font-weight:600;color:var(--m);display:block;margin:8px 0 4px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#fff;border:1px solid var(--l);border-radius:14px;padding:12px}
-.stat b{display:block;font-size:22px}.hide{display:none}
-details summary{cursor:pointer;font-weight:700;padding:6px 0}
-.sk{display:grid;grid-template-columns:1fr 130px;gap:6px;align-items:center;font-size:14px}
-#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--k);color:#fff;padding:12px 16px;border-radius:12px;display:none;z-index:9;max-width:90vw}
-pre{white-space:pre-wrap;font-family:inherit;background:var(--s);padding:10px;border-radius:10px;font-size:13px}
-.warn{background:#fff2b3;border-radius:8px;padding:6px 9px;font-size:13px;margin-top:6px}
+input,select,textarea{width:100%;min-height:48px;padding:11px 12px;border:1.5px solid var(--l);border-radius:12px;font:inherit;font-size:16px;background:#fff;color:var(--k)}
+textarea{min-height:90px}input:focus,select:focus,textarea:focus{outline:none;border-color:var(--k)}
+label.l{display:block;font-size:13px;font-weight:700;color:var(--m);margin:12px 0 6px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}@media(min-width:900px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:#fff;border:1px solid var(--l);border-radius:16px;padding:13px}.stat b{display:block;font-size:24px;margin-top:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--l);background:#fff;border-radius:999px;padding:9px 14px;font-size:15px;min-height:44px}
+.chip.on{background:var(--k);color:var(--y);border-color:var(--k);font-weight:700}.chip small{display:block;font-size:11px;opacity:.75;font-weight:400}
+.days{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.day{flex:0 0 auto;min-width:66px;text-align:center;border:1.5px solid var(--l);border-radius:14px;padding:8px 6px;background:#fff}
+.day small{display:block;font-size:11px;color:var(--m)}.day b{font-size:19px}.day.on{background:var(--k);color:#fff;border-color:var(--k)}.day.on small{color:#bbb}.day.none{opacity:.38}
+.times{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-top:6px}
+.times button{border:1.5px solid var(--k);background:#fff;border-radius:12px;min-height:46px;font-weight:700}.times button.on{background:var(--y)}
+.dayhead{position:sticky;top:60px;z-index:5;background:var(--s);padding:10px 2px 6px;font-weight:800;font-size:15px}
+.line{display:flex;gap:8px;padding:3px 0;font-size:15px}.line>span:first-child{flex:0 0 22px;text-align:center}
+.qbox{background:var(--s);border-radius:14px;padding:12px;margin-top:10px}.qbox .r{display:flex;justify-content:space-between;gap:10px;padding:4px 0;font-size:15px}.qbox .tot{font-weight:800;font-size:17px;border-top:1px solid var(--l);margin-top:6px;padding-top:8px}
+.list button.item{display:flex;width:100%;text-align:left;justify-content:space-between;gap:10px;background:#fff;border:1.5px solid var(--l);border-radius:12px;padding:11px 12px;margin-bottom:8px;align-items:center}
+.list button.item.on{border-color:var(--k);background:#fffbe0}
+.sw{position:relative;width:52px;height:30px;flex:0 0 auto;display:inline-block}.sw input{opacity:0;width:0;height:0;min-height:0;position:absolute}
+.sw span{position:absolute;inset:0;background:#d5d5cf;border-radius:999px;transition:.2s}.sw span:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.sw input:checked+span{background:var(--g)}.sw input:checked+span:before{transform:translateX(22px)}
+.hrow{display:grid;grid-template-columns:52px 60px 1fr 1fr;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--l)}.hrow b{font-size:15px}
+.hrow.off select{opacity:.35;pointer-events:none}
+.flag{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:8px 0;font-size:15px}
+.warn{background:#fff2b3;border-radius:10px;padding:8px 10px;font-size:14px;margin-top:10px}
+.sheet-bg{position:fixed;inset:0;background:rgba(17,19,22,.5);z-index:60;opacity:0;pointer-events:none;transition:opacity .2s}.sheet-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;background:#fff;border-radius:22px 22px 0 0;max-height:90vh;overflow:auto;padding:12px 16px calc(22px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .25s ease}
+.sheet.on{transform:none}.grab{width:46px;height:5px;border-radius:9px;background:#ddd;margin:0 auto 12px}
+@media(min-width:900px){.sheet{left:50%;right:auto;bottom:auto;top:50%;width:580px;border-radius:22px;padding:22px;transform:translate(-50%,-46%);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}.sheet.on{transform:translate(-50%,-50%);opacity:1;pointer-events:auto}.grab{display:none}}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--k);color:#fff;padding:12px 16px;border-radius:14px;display:none;z-index:80;max-width:92vw;font-size:15px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+@media(min-width:900px){#toast{bottom:24px}}
+pre{white-space:pre-wrap;font-family:inherit;background:var(--s);padding:12px;border-radius:12px;font-size:14px;margin:8px 0 0}
+details>summary{cursor:pointer;font-weight:700;padding:8px 0;list-style:none}details>summary::-webkit-details-marker{display:none}details>summary:before{content:"▸ ";color:var(--m)}details[open]>summary:before{content:"▾ "}
+.sk{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--l);font-size:15px}
+.stars button{border:0;background:none;font-size:24px;padding:0 1px;color:#d5d5cf;min-height:36px}.stars button.on{color:#e8a400}
+.sumbar{position:sticky;bottom:calc(70px + env(safe-area-inset-bottom));background:var(--k);color:#fff;border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-top:14px;z-index:6}
+@media(min-width:900px){.sumbar{bottom:16px}}
+.sumbar .tot{flex:1}.sumbar .tot b{font-size:20px;color:var(--y);display:block}
+/* website editor */
+.edbar{position:sticky;top:60px;z-index:8;background:var(--s);padding:8px 0 10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.edbar .sep{flex:1}
+.frame{background:#fff;border:1px solid var(--l);border-radius:16px;overflow:hidden;margin:0 auto;height:calc(100vh - 150px);transition:width .3s;width:100%}
+.frame.phone{width:400px;max-width:100%}.frame iframe{width:100%;height:100%;border:0;display:block}
+.pv{width:100%;aspect-ratio:16/10;border-radius:14px;background:#eee center/cover;border:1px solid var(--l)}
+.login{max-width:380px;margin:12vh auto 0;padding:0 20px}
+.empty{text-align:center;padding:28px 10px;color:var(--m)}
 </style>
 </head>
 <body>
-<header><span class="lp">L</span><b>Smart Start Admin</b><button onclick="load()">↻</button></header>
-<div id="login" style="padding:40px 20px;max-width:360px;margin:0 auto">
-  <h2>Enter admin PIN</h2><input id="pin" type="password" inputmode="numeric" placeholder="PIN"><br><br>
-  <button class="btn b-k" style="width:100%" onclick="login()">Open</button><p class="muted" id="lerr"></p>
+<header><span class="lp">L</span><span class="t" id="ttl">Smart Start Admin</span><button id="refresh" title="Refresh" class="hide">↻</button></header>
+<div id="loginBox" class="login">
+  <h2>Welcome back 👋</h2><p class="muted">Enter the admin PIN.</p>
+  <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="PIN">
+  <label class="flag" style="padding:12px 0"><span>Remember me on this device</span><span class="sw"><input type="checkbox" id="remember" checked><span></span></span></label>
+  <button class="btn b-k full" id="go">Open</button><p class="muted" id="lerr"></p>
 </div>
-<nav id="nav" class="hide"></nav>
-<main id="app" class="hide"></main>
+<nav id="side"></nav>
+<main id="app" style="display:none"></main>
+<nav id="bottom" style="display:none"></nav>
+<div class="sheet-bg" id="sbg"></div><div class="sheet" id="sheet"></div>
 <div id="toast"></div>
 <script>
-var PIN='', D=null, TAB='inbox';
-var SKILLS=['Steering & control','Mirrors & observation','Speed management','Gap selection','Intersections & roundabouts','Lane changes','Parking','Reverse / 3-point turn','Hazard awareness','Road rules'];
-var TABSDEF=[['inbox','📥 Inbox'],['upcoming','📅 Lessons'],['students','🎓 Students'],['money','💰 Money'],['new','➕ Book'],['site','🖊 Website'],['bot','🤖 Bot'],['hours','🕒 Hours'],['records','🗂 Records'],['settings','⚙️ Settings']];
-function $(s){return document.querySelector(s)}
-function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function toast(m){var t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(function(){t.style.display='none'},3500)}
-function money(n){n=+n||0;return '$'+(Math.round(n*100)/100).toFixed(2).replace(/\.00$/,'')}
-var API='https://script.google.com/macros/s/AKfycbwDzfI8GrcDGzRFAqjMM83Z2L5Dmupv8_P7K8cV6q8FGxfFqYOYhqO9dD94R6wi7sEG4w/exec';
-function call(fn,args,tries){tries=tries||0;return fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'admin',fn:fn,pin:PIN,args:args||[]})}).then(function(r){return r.text()}).then(function(t){var d;try{d=JSON.parse(t)}catch(e){if(tries<1&&/Load|FreeSlots/.test(fn))return call(fn,args,tries+1);throw new Error('Google is busy — please try again')}if(!d.ok)throw new Error(d.error||'Error');return d.data})}
-function run(fn,args,ok){toast('Working…');call(fn,args).then(function(d){if(d&&d.bookings){D=d;render()}toast('Done ✓');ok&&ok(d)}).catch(function(e){toast('⚠ '+e.message)})}
-function login(){PIN=$('#pin').value;$('#lerr').textContent='Opening…';call('adminLoad',[]).then(function(d){D=d;try{sessionStorage.pin=PIN}catch(e){}$('#login').classList.add('hide');$('#nav').classList.remove('hide');$('#app').classList.remove('hide');render()}).catch(function(e){$('#lerr').textContent=e.message})}
-function load(){if(PIN)run('adminLoad',[])}
-try{if(sessionStorage.pin){$('#pin').value=sessionStorage.pin;login()}}catch(e){}
-function nav(){$('#nav').innerHTML=TABSDEF.map(function(t){return '<button class="'+(t[0]===TAB?'on':'')+'" onclick="TAB=\''+t[0]+'\';render()">'+t[1]+(t[0]==='inbox'&&D.stats.pending?' ('+D.stats.pending+')':'')+'</button>'}).join('')}
-function due(b){return Math.max(0,((b.Status==='Declined'||b.Status==='Cancelled')?0:+b.Total||0)+(+b['Cancel Fee']||0)-(+b['Paid Amount']||0))}
-function wa(p){p=String(p).replace(/\D/g,'');if(p[0]==='0')p='61'+p.slice(1);return 'https://wa.me/'+p}
-function bCard(b,full){
-  var maps='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(b.Pickup);
-  var d=due(b), lic=[b['Licence No'],b['Licence State'],b['Licence Type'],b['Licence Expiry']?'exp '+b['Licence Expiry']:''].filter(String).join(' · ');
-  var expired=b['Licence Expiry']&&b['Licence Expiry']<D.today;
-  var h='<div class="card"><div class="row sp"><h3>'+esc(b.Name)+'</h3><span class="pill '+b.Status+'">'+b.Status+'</span></div>'+
-  '<div class="muted">'+esc(b.Date)+' · '+esc(b.Start)+'–'+esc(b.End)+' ('+b.Hours+'h) · '+esc(b.ID)+'</div>'+
-  '<div style="margin:8px 0">📍 '+esc(b.Pickup)+(b.Dropoff&&b.Dropoff!==b.Pickup?'<br>🏁 '+esc(b.Dropoff):'')+'<br>🪪 '+esc(lic||'no licence given')+(expired?' <b style="color:var(--r)">EXPIRED</b>':'')+
-  (b['Test Centre']||b['Test Date']?'<br>📝 Test: '+esc([b['Test Centre'],b['Test Date'],b['Test Booking Ref']].filter(String).join(' · ')):'')+
-  '<br>💵 '+esc(b.Purchase==='test'?'Test package':b.Purchase==='credit'?'Prepaid credit':b['Lessons Bought']+' lessons @ '+money(b['Unit Price']))+' · travel '+money(b['Travel Fee'])+' ('+b['Travel Min']+' min) · <b>total '+money(b.Total)+'</b>'+(d?' · <b style="color:var(--r)">due '+money(d)+'</b>':' · ✓ paid')+
-  (b['Student Notes']?'<br>💬 '+esc(b['Student Notes']):'')+'</div>'+
-  '<div class="row" style="margin-bottom:6px"><label style="margin:0"><input type="checkbox" style="width:auto" '+(b['Licence Sighted (ID check)']==='Y'?'checked':'')+' onchange="run(\'adminSetFlag\',[\''+b.ID+'\',\'Licence Sighted (ID check)\',this.checked?\'Y\':\'N\'])"> Licence sighted & matches</label>'+
-  '<label style="margin:0"><input type="checkbox" style="width:auto" '+(b['Phone Verified']==='Y'?'checked':'')+' onchange="run(\'adminSetFlag\',[\''+b.ID+'\',\'Phone Verified\',this.checked?\'Y\':\'N\'])"> Phoned & verified</label></div>'+
-  '<div class="row"><a class="btn" href="tel:'+esc(b.Phone)+'">📞</a><a class="btn" target="_blank" href="'+wa(b.Phone)+'">💬</a><a class="btn" target="_blank" href="'+maps+'">🗺 Navigate</a>';
-  if(b.Status==='Pending')h+='<button class="btn b-g" onclick="if(confirm(\'Confirm this lesson? The student will be emailed.\'))run(\'adminConfirm\',[\''+b.ID+'\'])">✓ Confirm</button><button class="btn b-r" onclick="var r=prompt(\'Reason (optional, sent to student)\');if(r!==null)run(\'adminDecline\',[\''+b.ID+'\',r])">✕ Decline</button>';
-  if(b.Status==='Confirmed')h+='<button class="btn" onclick="resched(\''+b.ID+'\')">🔁 Move</button><button class="btn b-r" onclick="cancelB(\''+b.ID+'\')">Cancel</button>';
-  if(d&&b.Status!=='Pending'&&b.Status!=='Declined')h+='<button class="btn b-y" onclick="var a=prompt(\'Amount received\',\''+d+'\');if(a)run(\'adminMarkPaid\',[\''+b.ID+'\',a])">$ Mark paid</button>';
-  h+='</div><div id="rs-'+b.ID+'"></div>';
-  if(b.Status==='Confirmed'||b.Status==='Completed')h+=notesForm(b);
-  if(full&&b.History)h+='<details><summary class="muted">History</summary><pre>'+esc(b.History)+'</pre></details>';
-  if(!b['Licence Sighted (ID check)']&&b.Status==='Confirmed')h+='<div class="warn">⚠ Check the physical learner licence matches '+esc(b.Name)+' before driving off.</div>';
-  return h+'</div>';
-}
-function notesForm(b){var sk={};try{sk=JSON.parse(b.Skills||'{}')}catch(e){}
-  return '<details><summary>📝 Lesson notes & skills</summary><div id="nf-'+b.ID+'">'+SKILLS.map(function(s,i){return '<div class="sk"><span>'+s+'</span><select data-s="'+esc(s)+'"><option value="">–</option>'+[1,2,3,4,5].map(function(n){return '<option '+(+sk[s]===n?'selected':'')+'>'+n+'</option>'}).join('')+'</select></div>'}).join('')+
-  '<label>Notes (what you covered, what to work on)</label><textarea rows="3" data-f="notes">'+esc(b['Lesson Notes'])+'</textarea><label>Areas / route driven</label><input data-f="route" value="'+esc(b['Route / Areas'])+'" placeholder="e.g. Thornton → East Maitland roundabouts → test route">'+
-  '<div class="grid"><div><label>Odometer start</label><input inputmode="numeric" data-f="odoStart" value="'+esc(b['Odometer Start'])+'"></div><div><label>Odometer end</label><input inputmode="numeric" data-f="odoEnd" value="'+esc(b['Odometer End'])+'"></div></div><br>'+
-  '<div class="row"><button class="btn" onclick="saveNotes(\''+b.ID+'\',false)">Save</button><button class="btn b-k" onclick="saveNotes(\''+b.ID+'\',true)">Save & mark completed</button></div></div></details>'}
-function saveNotes(id,complete){var f=$('#nf-'+id),d={skills:{},complete:complete};f.querySelectorAll('[data-s]').forEach(function(s){if(s.value)d.skills[s.dataset.s]=+s.value});f.querySelectorAll('[data-f]').forEach(function(x){d[x.dataset.f]=x.value});run('adminSaveLesson',[id,d])}
-function resched(id){var el=$('#rs-'+id);el.innerHTML='<label>New date</label><input type="date" onchange="loadFree(\''+id+'\',this.value)"><div id="fs-'+id+'"></div>'}
-function loadFree(id,date){var el=$('#fs-'+id);el.innerHTML='<p class="muted">Checking drive times…</p>';call('adminFreeSlots',[id,date]).then(function(s){el.innerHTML=s.length?'<label>Free times (drive-time checked)</label><div class="row">'+s.map(function(t){return '<button class="btn b-y" onclick="if(confirm(\'Move to '+date+' '+t+'? Student will be emailed.\'))run(\'adminReschedule\',[\''+id+'\',\''+date+'\',\''+t+'\'])">'+t+'</button>'}).join('')+'</div>':'<p class="muted">No free times that day.</p>'}).catch(function(e){el.textContent=e.message})}
-function cancelB(id){var w=prompt('Who is cancelling?\n1 = student (fee by notice period)\n2 = instructor (no fee)\n3 = no-show','1');if(!w)return;var who={1:'student',2:'instructor',3:'noshow'}[w];if(!who)return;var r=prompt('Reason (optional, sent to student)')||'';run('adminCancel',[id,who,r])}
-function render(){nav();var h='',B=D.bookings.slice().sort(function(a,b){return (a.Date+a.Start)<(b.Date+b.Start)?-1:1});
- if(TAB==='inbox'){var p=B.filter(function(b){return b.Status==='Pending'}),t=B.filter(function(b){return b.Date===D.today&&b.Status==='Confirmed'});
-  h='<div class="grid" style="margin-bottom:12px"><div class="stat"><span class="muted">Waiting for you</span><b>'+D.stats.pending+'</b></div><div class="stat"><span class="muted">Upcoming lessons</span><b>'+D.stats.upcoming+'</b></div></div>';
-  h+='<h3>Needs confirming</h3>'+(p.map(function(b){return bCard(b)}).join('')||'<p class="muted">Nothing pending 🎉</p>')+'<h3>Today</h3>'+(t.map(function(b){return bCard(b)}).join('')||'<p class="muted">No lessons today.</p>')}
- if(TAB==='upcoming'){var u=B.filter(function(b){return b.Date>=D.today&&(b.Status==='Confirmed'||b.Status==='Pending')}),past=B.filter(function(b){return b.Date<D.today||['Completed','Cancelled','Declined','No-show'].indexOf(b.Status)>=0}).reverse().slice(0,40);
-  h='<h3>Upcoming</h3>'+(u.map(function(b){return bCard(b,1)}).join('')||'<p class="muted">None.</p>')+'<h3>Past & closed</h3>'+past.map(function(b){return bCard(b,1)}).join('')}
- if(TAB==='students'){h='<input placeholder="Search name, phone, licence…" oninput="filt(this.value)" style="margin-bottom:10px">'+D.students.map(function(s){var bk=D.bookings.filter(function(b){return b.Email===s.email});var expired=s.licenceExpiry&&s.licenceExpiry<D.today;
-  return '<div class="card st" data-q="'+esc((s.name+s.phone+s.email+s.licence).toLowerCase())+'"><div class="row sp"><h3>'+esc(s.name)+'</h3><span class="pill">'+s.hoursDone+' hrs done</span></div><div class="muted">'+esc(s.phone)+' · '+esc(s.email)+'</div>'+
-  '<div style="margin:8px 0">🪪 '+esc([s.licence,s.licenceState,s.licenceType].filter(String).join(' · ')||'—')+(s.licenceExpiry?' · exp '+esc(s.licenceExpiry):'')+(expired?' <b style="color:var(--r)">EXPIRED</b>':'')+' · ID '+(s.idVerified?'✓ '+esc(s.idVerified):'<b style="color:var(--r)">not yet checked</b>')+
-  '<br>📝 Test: '+esc([s.testCentre,s.testDate,s.testRef].filter(String).join(' · ')||'not booked yet')+'<br>📘 Logbook credit earned with us: '+s.logbookHours+' hrs (3-for-1 capped at 10 instructor hrs)'+
-  '<br>💰 Paid '+money(s.paid)+' · Owing '+money(s.owed)+' · Prepaid lessons left: '+s.credits+' ('+money(s.prepaidValueLeft)+')</div>'+
-  '<details><summary>Progress summary</summary><pre>'+esc(s.summary||'No lesson notes yet — add notes after each lesson and the summary builds itself.')+'</pre></details>'+
-  '<details><summary>Edit record</summary>'+[['Licence No','licence'],['Licence State','licenceState'],['Licence Type','licenceType'],['Licence Expiry','licenceExpiry'],['Test Centre','testCentre'],['Test Date','testDate'],['Test Booking Ref','testRef'],['DOB','dob'],['Emergency Contact','emergency'],['Flags / Safety Notes','flags']].map(function(f){return '<label>'+f[0]+'</label><input data-k="'+f[0]+'" value="'+esc(s[f[1]])+'">'}).join('')+
-  '<br><button class="btn b-k" onclick="saveSt(this,\''+esc(s.email)+'\')">Save</button></details>'+
-  '<details><summary>Lessons ('+bk.length+')</summary>'+bk.map(function(b){return '<div class="muted">'+b.Date+' '+b.Start+' · '+b.Status+' · '+money(b.Total)+'</div>'}).join('')+'</details></div>'}).join('')}
- if(TAB==='money'){var s=D.stats;h='<div class="grid"><div class="stat"><span class="muted">Received this month</span><b>'+money(s.paidMonth)+'</b></div><div class="stat"><span class="muted">Received all time</span><b>'+money(s.paidAll)+'</b></div><div class="stat"><span class="muted">Owing to you</span><b>'+money(s.outstanding)+'</b></div><div class="stat"><span class="muted">Confirmed upcoming</span><b>'+money(s.upcomingValue)+'</b></div></div><br>'+
-  '<div class="card"><h3>By student</h3>'+D.students.map(function(x){return '<div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--l)"><span>'+esc(x.name)+'</span><span class="muted">paid '+money(x.paid)+' · owes '+money(x.owed)+' · prepaid left '+money(x.prepaidValueLeft)+'</span></div>'}).join('')+'</div>'+
-  '<div class="card"><h3>Unpaid bookings</h3>'+B.filter(function(b){return due(b)&&b.Status!=='Pending'}).map(function(b){return bCard(b)}).join('')+'</div>'}
- if(TAB==='new'){h='<div class="card"><h3>Book a lesson for a student (phone booking)</h3><p class="muted">Checks drive times like the website, then confirms immediately and emails the student.</p><div id="nb">'+
-  [['name','Full name'],['email','Email'],['phone','Mobile'],['address','Pick-up address'],['dropoff','Drop-off (blank = same)'],['licence','Licence no.'],['licenceState','Licence state'],['licenceExpiry','Licence expiry (yyyy-mm-dd)'],['date','Date (yyyy-mm-dd)'],['time','Start (HH:MM)'],['hours','Hours (1 or 2)'],['purchase','Lessons bought (1–20, test, credit)'],['notes','Notes']].map(function(f){return '<label>'+f[1]+'</label><input data-n="'+f[0]+'">'}).join('')+
-  '</div><br><button class="btn b-k" onclick="manual()">Book & confirm</button></div>'}
- if(TAB==='site'){var keys=Object.keys(D.content).sort();h='<div class="card"><h3>Edit the website</h3><p class="muted">Every text, price, photo link and colour on the site. Changes show on the website within about a minute. Prices here also drive the booking quotes.</p><input placeholder="Search…" oninput="filtK(this.value)"></div>'+
-  keys.map(function(k){var v=D.content[k];return '<div class="card kv" data-q="'+esc((k+' '+v).toLowerCase())+'"><label>'+esc(k)+'</label>'+(String(v).length>60?'<textarea rows="3">'+esc(v)+'</textarea>':'<input value="'+esc(v)+'">')+'<br><br><button class="btn b-y" onclick="saveKV(this,\'Content\',\''+esc(k)+'\')">Save</button></div>'}).join('')+
-  '<div class="card"><h3>FAQ (website + chat bot)</h3>'+tableEd('FAQ',D.faq,['Question','Answer','Keywords','Show on website (Y/N)'])+'</div>'}
- if(TAB==='bot'){var q=D.chat.slice().reverse();h='<div class="card"><h3>Teach the chat assistant</h3><p class="muted">Questions the assistant couldn\'t answer. Type an answer and it learns it (added to FAQ).</p></div>'+
-  q.map(function(c){return '<div class="card"><div class="muted">'+esc(c.Time)+' · bot answered: '+esc(c['Bot Answered?'])+'</div><b>'+esc(c.Question)+'</b>'+(c['Added to FAQ?']==='Y'?'<p>✓ '+esc(c['Your Answer (teach the bot)'])+'</p>':'<textarea rows="2" placeholder="Your answer…"></textarea><input placeholder="keywords (optional, comma separated)"><br><br><button class="btn b-k" onclick="teach(this,'+c._row+')">Teach bot</button>')+'</div>'}).join('')}
- if(TAB==='hours'){h='<div class="card"><h3>Weekly hours</h3><p class="muted">Use 24-hr time (08:00). Leave blank for days off. Tip: anything you add to your Google Calendar also blocks booking times automatically.</p>'+tableEd('Availability',D.availability,['Day','Start','End'])+'</div><div class="card"><h3>Days off / blocked times</h3>'+tableEd('Blocked',D.blocked,['Date (yyyy-mm-dd)','Start (blank = all day)','End','Reason'],3)+'</div>'}
- if(TAB==='records'){h='<div class="card"><h3>Legal records (keep 5 years)</h3><p class="muted">NSW requires each student\'s name, address, phone, lesson dates/times and car rego to be kept for at least 5 years. Everything is stored in your Google Sheet — never delete rows.</p><a class="btn b-k" target="_blank" href="'+D.sheetUrl+'">Open records sheet</a></div>'+
-  '<div class="card"><h3>Activity log</h3>'+D.events.slice().reverse().slice(0,150).map(function(e){return '<div class="muted" style="padding:4px 0;border-bottom:1px solid var(--l)">'+esc(e.Time)+' · '+esc(e.Email||'visitor')+' · <b>'+esc(e.Event)+'</b> '+esc(e.Detail)+'</div>'}).join('')+'</div>'}
- if(TAB==='settings'){h='<div class="card"><h3>Settings</h3><p class="muted">PayID, car rego, emails, notice period. (PIN is changed in the Google Sheet → Settings tab.)</p></div>'+D.settings.map(function(s){return '<div class="card"><label>'+esc(s.Key)+' <span class="muted">— '+esc(s.Notes)+'</span></label><input value="'+esc(s.Value)+'"><br><br><button class="btn b-y" onclick="saveKV(this,\'Settings\',\''+esc(s.Key)+'\')">Save</button></div>'}).join('')}
- $('#app').innerHTML=h}
-function filt(q){document.querySelectorAll('.st').forEach(function(c){c.style.display=c.dataset.q.indexOf(q.toLowerCase())>=0?'':'none'})}
-function filtK(q){document.querySelectorAll('.kv').forEach(function(c){c.style.display=c.dataset.q.indexOf(q.toLowerCase())>=0?'':'none'})}
-function saveKV(btn,tab,k){var el=btn.parentNode.querySelector('input,textarea');run('adminSaveKV',[tab,k,el.value])}
-function saveSt(btn,email){var o={};btn.parentNode.querySelectorAll('[data-k]').forEach(function(i){o[i.dataset.k]=i.value});run('adminSaveStudent',[email,o])}
-function teach(btn,row){var c=btn.parentNode;run('adminTeach',[row,c.querySelector('textarea').value,c.querySelector('input').value])}
-function manual(){var p={};document.querySelectorAll('#nb [data-n]').forEach(function(i){p[i.dataset.n]=i.value.trim()});p.hours=+p.hours||1;p.purchase=p.purchase||'1';run('adminManualBooking',[p])}
-function tableEd(tab,rows,cols,extra){var id='t-'+tab;var data=rows.map(function(r){return cols.map(function(c){return r[c]||''})});for(var i=0;i<(extra||1);i++)data.push(cols.map(function(){return ''}));
-  return '<div id="'+id+'">'+data.map(function(r){return '<div class="card" style="background:var(--s)">'+r.map(function(v,j){return '<label>'+esc(cols[j])+'</label>'+(String(v).length>50?'<textarea rows="2">'+esc(v)+'</textarea>':'<input value="'+esc(v)+'">')}).join('')+'</div>'}).join('')+'</div><button class="btn b-k" onclick="saveTable(\''+tab+'\','+cols.length+')">Save '+tab+'</button>'}
-function saveTable(tab,n){var rows=[];document.querySelectorAll('#t-'+tab+' > .card').forEach(function(c){rows.push(Array.from(c.querySelectorAll('input,textarea')).map(function(i){return i.value.trim()}))});run('adminSaveTable',[tab,rows])}
+const API='https://script.google.com/macros/s/AKfycbwDzfI8GrcDGzRFAqjMM83Z2L5Dmupv8_P7K8cV6q8FGxfFqYOYhqO9dD94R6wi7sEG4w/exec';
+const SITE=location.href.replace(/[^/]*$/,'');
+let PIN='',D=null,TAB='inbox',CH={},BK=null,EDF=null;
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>'$'+(Math.round((+n||0)*100)/100).toFixed(2).replace(/\.00$/,'');
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const SKILLS=['Steering & control','Mirrors & observation','Speed management','Gap selection','Intersections & roundabouts','Lane changes','Parking','Reverse / 3-point turn','Hazard awareness','Road rules'];
+const TABS=[['inbox','📥','Inbox'],['lessons','📅','Lessons'],['book','➕','Book'],['students','🎓','Students'],['money','💰','Money'],['hours','🕒','Hours'],['site','🖊️','Website'],['bot','🤖','Chat bot'],['records','🗂️','Records'],['settings','⚙️','Settings']];
+const BOTTOM=['inbox','lessons','book','students','more'];
+function toast(m,ms){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',ms||3200)}
+async function call(fn,args,tries=0){
+  const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'admin',fn,pin:PIN,args:args||[]})});
+  const t=await r.text();let d;try{d=JSON.parse(t)}catch(e){if(tries<1&&/Load|Slots|Free/.test(fn)){await sleep(900);return call(fn,args,tries+1)}throw new Error('Google is busy — please try again')}
+  if(!d.ok)throw new Error(d.error||'Error');return d.data}
+async function pub(params,tries=0){const t=await (await fetch(API+'?'+new URLSearchParams(params))).text();let d;try{d=JSON.parse(t)}catch(e){if(tries<2){await sleep(1000);return pub(params,tries+1)}throw new Error('Google is busy — try again')}if(!d.ok)throw new Error(d.error||'Error');return d}
+async function run(fn,args,done){toast('Working…',60000);try{const d=await call(fn,args);if(d&&d.bookings){D=d}closeSheet();render();toast(done||'Done ✓')}catch(e){toast('⚠ '+e.message,5000)}}
+/* ---------- dates & times ---------- */
+const pad=n=>String(n).padStart(2,'0');
+const mins=t=>{const p=String(t).split(':');return +p[0]*60+(+p[1]||0)};const hh=m=>pad(Math.floor(m/60))+':'+pad(m%60);
+function fmtT(t){if(!t)return '';const [h,m]=t.split(':').map(Number);return ((h%12)||12)+':'+pad(m)+(h<12?' am':' pm')}
+function dObj(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)}
+function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function fmtD(s,long){if(!s)return '';const d=dObj(s);return d.toLocaleDateString('en-AU',long?{weekday:'long',day:'numeric',month:'long'}:{weekday:'short',day:'numeric',month:'short'})}
+function addDays(s,n){const d=dObj(s);d.setDate(d.getDate()+n);return ymd(d)}
+function topts(sel,from=300,to=1320){let h='';for(let m=from;m<=to;m+=30){const v=hh(m);h+=`<option value="${v}"${v===sel?' selected':''}>${fmtT(v)}</option>`}return h}
+function relDay(s){if(s===D.today)return 'Today';if(s===addDays(D.today,1))return 'Tomorrow';return fmtD(s)}
+/* ---------- login & shell ---------- */
+async function login(){PIN=$('#pin').value.trim();$('#lerr').textContent='Opening…';try{D=await call('adminLoad',[]);try{if($('#remember').checked)localStorage.ssPin=PIN;else localStorage.removeItem('ssPin')}catch(e){}
+  $('#loginBox').style.display='none';$('#app').style.display='';$('#bottom').style.display='';$('#refresh').classList.remove('hide');render()}catch(e){$('#lerr').textContent=e.message}}
+$('#go').onclick=login;$('#pin').onkeydown=e=>{if(e.key==='Enter')login()};
+try{if(localStorage.ssPin){$('#pin').value=localStorage.ssPin;login()}}catch(e){}
+$('#refresh').onclick=async()=>{toast('Refreshing…');try{D=await call('adminLoad',[]);render();toast('Up to date ✓')}catch(e){toast('⚠ '+e.message)}};
+function go(t){if(TAB==='site'&&Object.keys(CH).length&&t!=='site'&&!confirm('You have unsaved website changes. Leave without saving?'))return;TAB=t;closeSheet();render();scrollTo(0,0)}
+function navs(){const pend=D.stats.pending;
+  $('#side').innerHTML=TABS.map(([k,i,l])=>`<button class="${k===TAB?'on':''}" data-go="${k}"><span>${i}</span>${l}${k==='inbox'&&pend?`<span class="dot">${pend}</span>`:''}</button>`).join('');
+  $('#bottom').innerHTML=BOTTOM.map(k=>{if(k==='more'){const on=!['inbox','lessons','book','students'].includes(TAB);return `<button class="${on?'on':''}" data-act="more"><i>☰</i>More</button>`}const t=TABS.find(x=>x[0]===k);return `<button class="${k===TAB?'on':''}" data-go="${k}"><i>${t[1]}</i>${t[2]}${k==='inbox'&&pend?`<span class="dot">${pend}</span>`:''}</button>`}).join('');
+  $('#ttl').textContent=(TABS.find(x=>x[0]===TAB)||[,,'Admin'])[2]}
+function render(){navs();const f={inbox:vInbox,lessons:vLessons,book:vBook,students:vStudents,money:vMoney,hours:vHours,site:vSite,bot:vBot,records:vRecords,settings:vSettings}[TAB];$('#app').innerHTML='<div class="wrap">'+f()+'</div>';(AFTER[TAB]||(()=>{}))()}
+const AFTER={};
+/* ---------- sheet ---------- */
+function sheet(html){$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#sbg').classList.add('on')}
+function closeSheet(){$('#sheet').classList.remove('on');$('#sbg').classList.remove('on')}
+$('#sbg').onclick=closeSheet;
+/* ---------- helpers ---------- */
+const B=id=>D.bookings.find(b=>b.ID===id);
+const due=b=>Math.max(0,((b.Status==='Declined'||b.Status==='Cancelled')?0:+b.Total||0)+(+b['Cancel Fee']||0)-(+b['Paid Amount']||0));
+const wa=p=>{p=String(p).replace(/\D/g,'');if(p[0]==='0')p='61'+p.slice(1);return 'https://wa.me/'+p};
+const maps=a=>'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(a);
+const realEmail=e=>e&&!/@no-email\.local$/.test(e);
+function pkgLabel(b){return b.Purchase==='test'?'Test package':b.Purchase==='credit'?'Prepaid credit':(b['Lessons Bought']+' lesson'+(b['Lessons Bought']>1?'s':'')+' @ '+money(b['Unit Price']))}
+function bCard(b,o={}){
+  const d=due(b),lic=[b['Licence No'],b['Licence State'],b['Licence Type']].filter(String).join(' · '),exp=b['Licence Expiry'],expired=exp&&exp<D.today;
+  let h=`<div class="card"><div class="row sp" style="align-items:flex-start"><div><h3>${esc(b.Name)}</h3><div class="muted">${o.noDate?'':relDay(b.Date)+' · '}${fmtT(b.Start)} – ${fmtT(b.End)} · ${b.Hours} hr</div></div><span class="pill ${b.Status}">${b.Status}</span></div><div style="margin-top:8px">
+  <div class="line"><span>📍</span><a href="${maps(b.Pickup)}" target="_blank">${esc(b.Pickup)}</a></div>${b.Dropoff&&b.Dropoff!==b.Pickup?`<div class="line"><span>🏁</span><span>${esc(b.Dropoff)}</span></div>`:''}
+  <div class="line"><span>🪪</span><span>${esc(lic||'No licence given')}${exp?' · exp '+esc(exp):''}${expired?' <b style="color:var(--r)">EXPIRED</b>':''}</span></div>
+  ${b['Test Centre']||b['Test Date']?`<div class="line"><span>📝</span><span>Test: ${esc([b['Test Centre'],b['Test Date'],b['Test Booking Ref']].filter(String).join(' · '))}</span></div>`:''}
+  <div class="line"><span>💵</span><span>${esc(pkgLabel(b))} · travel ${money(b['Travel Fee'])} · <b>${money(b.Total)}</b> ${d?`<b style="color:var(--r)">· ${money(d)} due</b>`:'· ✓ paid'}</span></div>
+  ${b['Student Notes']?`<div class="line"><span>💬</span><span>${esc(b['Student Notes'])}</span></div>`:''}</div>`;
+  if(b.Status==='Confirmed'||b.Status==='Pending')h+=`<div class="flag"><span>🪪 Licence sighted & matches</span><label class="sw"><input type="checkbox" data-flag="Licence Sighted (ID check)" data-id="${b.ID}" ${b['Licence Sighted (ID check)']==='Y'?'checked':''}><span></span></label></div>
+  <div class="flag" style="padding-top:0"><span>📞 Phoned & verified</span><label class="sw"><input type="checkbox" data-flag="Phone Verified" data-id="${b.ID}" ${b['Phone Verified']==='Y'?'checked':''}><span></span></label></div>`;
+  h+=`<div class="acts"><a class="btn b-o" href="tel:${esc(b.Phone)}"><i>📞</i>Call</a><a class="btn b-o" target="_blank" href="${wa(b.Phone)}"><i>💬</i>WhatsApp</a><a class="btn b-o" target="_blank" href="${maps(b.Pickup)}"><i>🗺️</i>Navigate</a>`;
+  if(b.Status==='Pending')h+=`<button class="btn b-g" data-act="confirm" data-id="${b.ID}"><i>✓</i>Confirm</button><button class="btn b-r" data-act="decline" data-id="${b.ID}"><i>✕</i>Decline</button>`;
+  if(b.Status==='Confirmed')h+=`<button class="btn" data-act="move" data-id="${b.ID}"><i>🔁</i>Move</button><button class="btn b-r" data-act="cancel" data-id="${b.ID}"><i>✕</i>Cancel</button>`;
+  if(d&&!['Pending','Declined'].includes(b.Status))h+=`<button class="btn b-y" data-act="paid" data-id="${b.ID}"><i>$</i>Mark paid</button>`;
+  if(['Confirmed','Completed'].includes(b.Status))h+=`<button class="btn b-k" data-act="notes" data-id="${b.ID}"><i>📝</i>Notes</button>`;
+  h+=`</div>`;
+  if(b.Status==='Confirmed'&&b['Licence Sighted (ID check)']!=='Y')h+=`<div class="warn">⚠ Check the physical licence matches ${esc(b.Name)} before driving off.</div>`;
+  if(o.hist&&b.History)h+=`<details><summary class="muted">History</summary><pre>${esc(b.History)}</pre></details>`;
+  return h+'</div>'}
+/* ---------- views ---------- */
+function vInbox(){const s=D.stats,BS=D.bookings.slice().sort((a,b)=>(a.Date+a.Start)<(b.Date+b.Start)?-1:1);
+  const p=BS.filter(b=>b.Status==='Pending'),t=BS.filter(b=>b.Date===D.today&&b.Status==='Confirmed'),tm=BS.filter(b=>b.Date===addDays(D.today,1)&&b.Status==='Confirmed');
+  return `<div class="stats"><div class="stat"><span class="muted">Needs your OK</span><b>${s.pending}</b></div><div class="stat"><span class="muted">Upcoming lessons</span><b>${s.upcoming}</b></div><div class="stat"><span class="muted">Owing to you</span><b>${money(s.outstanding)}</b></div><div class="stat"><span class="muted">This month</span><b>${money(s.paidMonth)}</b></div></div>
+  <h2>Needs confirming</h2>${p.map(b=>bCard(b)).join('')||'<div class="card empty">Nothing waiting 🎉</div>'}
+  <h2>Today</h2>${t.map(b=>bCard(b,{noDate:1})).join('')||'<div class="card empty">No lessons today</div>'}
+  ${tm.length?'<h2>Tomorrow</h2>'+tm.map(b=>bCard(b,{noDate:1})).join(''):''}`}
+function vLessons(){const BS=D.bookings.slice().sort((a,b)=>(a.Date+a.Start)<(b.Date+b.Start)?-1:1);
+  const up=BS.filter(b=>b.Date>=D.today&&['Confirmed','Pending'].includes(b.Status)),past=BS.filter(b=>!up.includes(b)).reverse().slice(0,40);
+  let h='<div class="row sp"><h2>Upcoming</h2><button class="btn b-y" data-go="book">➕ Book</button></div>',last='';
+  up.forEach(b=>{if(b.Date!==last){h+=`<div class="dayhead">${relDay(b.Date)} <span class="muted">· ${fmtD(b.Date,1)}</span></div>`;last=b.Date}h+=bCard(b,{noDate:1,hist:1})});
+  if(!up.length)h+='<div class="card empty">No upcoming lessons</div>';
+  return h+`<details style="margin-top:16px"><summary>Past & closed (${past.length})</summary>${past.map(b=>bCard(b,{hist:1})).join('')}</details>`}
+function vStudents(){return `<input id="sq" placeholder="🔎 Search name, phone, licence…" style="margin-bottom:12px">`+(D.students.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(s=>{const bk=D.bookings.filter(b=>b.Email===s.email),expired=s.licenceExpiry&&s.licenceExpiry<D.today,next=bk.filter(b=>b.Date>=D.today&&b.Status==='Confirmed').sort((a,b)=>(a.Date+a.Start)<(b.Date+b.Start)?-1:1)[0];
+  return `<div class="card st" data-q="${esc((s.name+' '+s.phone+' '+s.email+' '+s.licence).toLowerCase())}"><div class="row sp"><h3>${esc(s.name)}</h3><span class="pill">${s.hoursDone} hrs done</span></div>
+  <div class="muted">${esc(s.phone)}${realEmail(s.email)?' · '+esc(s.email):''}</div>
+  <div style="margin-top:8px"><div class="line"><span>🪪</span><span>${esc([s.licence,s.licenceState,s.licenceType].filter(String).join(' · ')||'—')}${s.licenceExpiry?' · exp '+esc(s.licenceExpiry):''}${expired?' <b style="color:var(--r)">EXPIRED</b>':''} · ${s.idVerified?'ID ✓':'<b style="color:var(--r)">ID not checked</b>'}</span></div>
+  <div class="line"><span>📅</span><span>${next?'Next: '+relDay(next.Date)+' '+fmtT(next.Start):'No upcoming lesson'}</span></div>
+  <div class="line"><span>📝</span><span>Test: ${esc([s.testCentre,s.testDate].filter(String).join(' · ')||'not booked')}</span></div>
+  <div class="line"><span>💰</span><span>Paid ${money(s.paid)} · owes ${money(s.owed)} · ${s.credits} prepaid lesson${s.credits==1?'':'s'} left</span></div></div>
+  <div class="acts"><a class="btn b-o" href="tel:${esc(s.phone)}"><i>📞</i>Call</a><button class="btn b-y" data-act="bookFor" data-email="${esc(s.email)}"><i>➕</i>Book</button><button class="btn" data-act="stuEdit" data-email="${esc(s.email)}"><i>✏️</i>Edit</button></div>
+  <details><summary>Progress summary</summary><pre>${esc(s.summary||'Builds automatically from your lesson notes.')}</pre></details>
+  <details><summary>Lessons (${bk.length})</summary>${bk.map(b=>`<div class="muted">${fmtD(b.Date)} ${fmtT(b.Start)} · ${b.Status} · ${money(b.Total)}</div>`).join('')}</details></div>`}).join('')||'<div class="card empty">No students yet</div>')}
+AFTER.students=()=>{$('#sq').oninput=e=>{const q=e.target.value.toLowerCase();$$('.st').forEach(c=>c.style.display=c.dataset.q.includes(q)?'':'none')}};
+function vMoney(){const s=D.stats;return `<div class="stats"><div class="stat"><span class="muted">Received this month</span><b>${money(s.paidMonth)}</b></div><div class="stat"><span class="muted">Received all time</span><b>${money(s.paidAll)}</b></div><div class="stat"><span class="muted">Owing to you</span><b>${money(s.outstanding)}</b></div><div class="stat"><span class="muted">Confirmed upcoming</span><b>${money(s.upcomingValue)}</b></div></div>
+  <div class="card"><h3>By student</h3>${D.students.map(x=>`<div class="row sp" style="padding:9px 0;border-bottom:1px solid var(--l)"><b>${esc(x.name)}</b><span class="muted">paid ${money(x.paid)} · owes ${money(x.owed)} · prepaid left ${money(x.prepaidValueLeft)} · expected if all prepaid used ${money(x.paid+x.owed)}</span></div>`).join('')||'<p class="muted">No students yet</p>'}</div>
+  <h2>Unpaid</h2>${D.bookings.filter(b=>due(b)&&!['Pending','Declined'].includes(b.Status)).map(b=>bCard(b)).join('')||'<div class="card empty">All paid 🎉</div>'}`}
+/* ---------- booking wizard (same checks as the website) ---------- */
+function newBK(st){BK={st:st||null,name:st?st.name:'',phone:st?st.phone:'',email:st&&realEmail(st.email)?st.email:'',licence:st?st.licence:'',licenceState:st&&st.licenceState||'NSW',licenceExpiry:st?st.licenceExpiry:'',address:st?st.address:'',addrOk:!!(st&&st.address),dropoff:'',purchase:'1',hours:1,date:'',time:'',notes:'',quote:null,days:null,res:null}}
+function vBook(){if(!BK)newBK();const b=BK,st=b.st,cr=st?st.credits:0;
+  const pk=[['1','1 lesson'],['2','2 lessons'],['3','3'],['4','4'],['5','5 lessons'],['10','10 lessons'],['test','Test pkg']];if(cr>0)pk.push(['credit',`Use prepaid (${cr})`]);
+  return `<h2>Book a lesson</h2>
+  <div class="card"><h3>1 · Student</h3>${st?`<div class="row sp" style="margin-top:8px"><div><b>${esc(st.name)}</b><div class="muted">${esc(st.phone)}${cr?' · '+cr+' prepaid lessons':''}</div></div><button class="btn b-o" data-act="bkClear">Change</button></div>`:
+   `<input id="bkq" placeholder="🔎 Existing student — type a name or phone" style="margin-top:8px"><div class="list" id="bkres" style="margin-top:8px"></div>
+   <details ${b.name?'open':''}><summary>…or a new student</summary><div class="g2"><div><label class="l">Full name</label><input data-bk="name" value="${esc(b.name)}"></div><div><label class="l">Mobile</label><input data-bk="phone" type="tel" value="${esc(b.phone)}"></div></div>
+   <label class="l">Email (optional — for confirmations)</label><input data-bk="email" type="email" value="${esc(b.email)}">
+   <div class="g2"><div><label class="l">Licence no.</label><input data-bk="licence" value="${esc(b.licence)}"></div><div><label class="l">Licence state</label><select data-bk="licenceState">${['NSW','QLD','VIC','ACT','SA','WA','TAS','NT','Overseas'].map(x=>`<option${x===b.licenceState?' selected':''}>${x}</option>`).join('')}</select></div></div>
+   <label class="l">Licence expiry</label><input data-bk="licenceExpiry" type="date" value="${esc(b.licenceExpiry)}"></details>`}</div>
+  <div class="card"><h3>2 · Pick-up address</h3>${b.addrOk?`<div class="row sp" style="margin-top:8px"><span>📍 ${esc(b.address)}</span><button class="btn b-o" data-act="bkAddr">Change</button></div>`:`<div class="row" style="margin-top:8px;flex-wrap:nowrap"><input id="bka" placeholder="Street, suburb" value="${esc(b.address)}"><button class="btn b-k" data-act="bkFind">Find</button></div><div class="list" id="bkares" style="margin-top:8px"></div>`}
+   ${b.addrOk?`<label class="flag"><span>Drop off somewhere else</span><span class="sw"><input type="checkbox" id="bkdrop" ${b.dropoff?'checked':''}><span></span></span></label>${b.dropoff?`<div class="muted">🏁 ${esc(b.dropoff)}</div>`:''}<div id="bkdbox" style="display:none"><div class="row" style="flex-wrap:nowrap"><input id="bkd" placeholder="Drop-off address"><button class="btn b-k" data-act="bkFindD">Find</button></div><div class="list" id="bkdres" style="margin-top:8px"></div></div>`:''}</div>
+  <div class="card"><h3>3 · Package & length</h3><div class="chips" style="margin-top:8px">${pk.map(([v,l])=>`<button class="chip ${b.purchase===v?'on':''}" data-act="bkPkg" data-v="${v}">${l}</button>`).join('')}</div>
+   <label class="l">Length of this lesson</label><div class="chips"><button class="chip ${b.hours==1?'on':''}" data-act="bkHrs" data-v="1">1 hour</button><button class="chip ${b.hours==2?'on':''}" data-act="bkHrs" data-v="2">2 hours</button></div>
+   <div id="bkq2">${b.quote?quoteHtml(b.quote):(b.addrOk?'<p class="muted">Calculating…</p>':'<p class="muted">Add the address to see the price.</p>')}</div></div>
+  <div class="card"><h3>4 · Day & time</h3><p class="muted small">Only times RJ can actually reach are shown — checked against the lessons before and after, with drive time.</p><div id="bkdays">${b.addrOk?(b.days?daysHtml(b.days,b.date,'bkDay'):'<p class="muted">Checking the diary…</p>'):'<p class="muted">Add the address first.</p>'}</div><div id="bktimes">${b.days&&b.date?timesHtml(b.days.find(x=>x.date===b.date),b.time,'bkTime'):''}</div></div>
+  <div class="card"><h3>5 · Notes (optional)</h3><textarea data-bk="notes" placeholder="School pick-up, nervous, test prep…">${esc(b.notes)}</textarea></div>
+  <div class="sumbar"><div class="tot">${b.date&&b.time?`${relDay(b.date)} ${fmtT(b.time)}`:'Pick a time'}<b>${b.quote&&b.quote.total!=null?money(b.quote.total):'—'}</b></div><button class="btn b-y" data-act="bkGo" ${bkReady()?'':'disabled'}>Book & confirm</button></div>`}
+function bkReady(){const b=BK;return b&&(b.st||(b.name&&b.phone))&&b.addrOk&&b.date&&b.time&&b.quote&&!b.quote.outOfArea&&!b.quote.error}
+function quoteHtml(q){if(q.outOfArea)return `<div class="warn">About ${q.driveMin} min away — outside the 30-minute area.</div>`;if(q.error)return `<div class="warn">${esc(q.error)}</div>`;
+  return `<div class="qbox">${q.lines.map(l=>`<div class="r"><span>${esc(l[0])}</span><b>${l[1]?money(l[1]):''}</b></div>`).join('')}<div class="r tot"><span>Total</span><span>${money(q.total)}</span></div></div>`}
+function daysHtml(days,sel,act){return `<div class="days">${days.map(x=>{const d=dObj(x.date);return `<button class="day ${x.date===sel?'on':''} ${x.slots.length?'':'none'}" data-act="${act}" data-v="${x.date}"><small>${d.toLocaleDateString('en-AU',{weekday:'short'})}</small><b>${d.getDate()}</b><small>${x.slots.length?x.slots.length+' free':(x.note?'off':'full')}</small></button>`}).join('')}</div>`}
+function timesHtml(day,sel,act){if(!day)return '';if(!day.slots.length)return '<p class="muted">No free times this day.</p>';return `<div class="times">${day.slots.map(t=>`<button class="${t===sel?'on':''}" data-act="${act}" data-v="${t}">${fmtT(t)}</button>`).join('')}</div>`}
+async function bkRefresh(){const b=BK;if(!b.addrOk)return render();b._loading=true;render();
+  try{const [q,days]=await Promise.all([pub({action:'quote',address:b.address,hours:b.hours,purchase:b.purchase,email:b.st?b.st.email:''}),call('adminSlots',[b.address,b.dropoff||b.address,b.hours,D.today,14])]);
+    if(BK!==b)return;b.quote=q.quote;b.days=days;if(b.date&&!(days.find(x=>x.date===b.date)||{slots:[]}).slots.includes(b.time))b.time='';if(!b.date){const f=days.find(x=>x.slots.length);if(f)b.date=f.date}b._loading=false;render()}catch(e){b._loading=false;toast('⚠ '+e.message,5000)}}
+AFTER.book=()=>{if(BK&&BK.addrOk&&!BK.days&&!BK._loading)return bkRefresh();$$('[data-bk]').forEach(i=>i.oninput=()=>{BK[i.dataset.bk]=i.value;const r=bkReady();const g=$('[data-act=bkGo]');if(g)g.disabled=!r});
+  const q=$('#bkq');if(q)q.oninput=()=>{const v=q.value.toLowerCase().trim();$('#bkres').innerHTML=v.length<2?'':D.students.filter(s=>(s.name+' '+s.phone).toLowerCase().includes(v)).slice(0,6).map(s=>`<button class="item" data-act="bkPick" data-email="${esc(s.email)}"><span><b>${esc(s.name)}</b><br><span class="muted">${esc(s.phone)}</span></span><span>›</span></button>`).join('')||'<p class="muted">No match — add as a new student below.</p>'};
+  const a=$('#bka');if(a)a.onkeydown=e=>{if(e.key==='Enter')ACT.bkFind()};
+  const dr=$('#bkdrop');if(dr)dr.onchange=()=>{if(dr.checked)$('#bkdbox').style.display='';else{BK.dropoff='';bkRefresh()}}};
+/* ---------- hours ---------- */
+const WEEK=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+function vHours(){const av={};D.availability.forEach(r=>av[r.Day]=r);const bl=D.blocked.filter(b=>b['Date (yyyy-mm-dd)']>=D.today).sort((a,b)=>a['Date (yyyy-mm-dd)']<b['Date (yyyy-mm-dd)']?-1:1);
+  return `<h2>Working hours</h2><div class="card"><p class="muted small" style="margin-top:0">Students can only book inside these hours. Anything in your Google Calendar also blocks time automatically.</p>
+  ${WEEK.map(d=>{const r=av[d]||{},on=!!(r.Start&&r.End);return `<div class="hrow ${on?'':'off'}" data-day="${d}"><b>${d}</b><label class="sw"><input type="checkbox" class="hon" ${on?'checked':''}><span></span></label><select class="hs">${topts(r.Start||'08:00')}</select><select class="he">${topts(r.End||'18:00')}</select></div>`}).join('')}
+  <button class="btn b-k full" data-act="saveHours" style="margin-top:12px">Save working hours</button></div>
+  <h2>Time off</h2><div class="card"><label class="l" style="margin-top:0">Date</label><input type="date" id="toD" min="${D.today}" value="${D.today}">
+  <label class="flag"><span>All day</span><span class="sw"><input type="checkbox" id="toAll" checked><span></span></span></label>
+  <div class="g2" id="toT" style="display:none"><div><label class="l">From</label><select id="toS">${topts('12:00')}</select></div><div><label class="l">Until</label><select id="toE">${topts('14:00')}</select></div></div>
+  <label class="l">Reason (private)</label><input id="toR" placeholder="e.g. Appointment, holiday"><button class="btn b-y full" data-act="addOff" style="margin-top:12px">Block this time</button></div>
+  ${bl.length?`<div class="card"><h3>Upcoming time off</h3>${bl.map(b=>`<div class="row sp" style="padding:10px 0;border-bottom:1px solid var(--l)"><span><b>${fmtD(b['Date (yyyy-mm-dd)'])}</b> · ${b['Start (blank = all day)']?fmtT(b['Start (blank = all day)'])+' – '+fmtT(b.End):'All day'}<br><span class="muted">${esc(b.Reason)}</span></span><button class="btn b-r" data-act="delOff" data-row="${b._row}">Remove</button></div>`).join('')}</div>`:''}`}
+AFTER.hours=()=>{$$('.hon').forEach(c=>c.onchange=()=>c.closest('.hrow').classList.toggle('off',!c.checked));$('#toAll').onchange=e=>$('#toT').style.display=e.target.checked?'none':''};
+/* ---------- website editor ---------- */
+const FONTS=['Sora','Inter','Poppins','Montserrat','DM Sans','Nunito','Raleway','Lato','Roboto','Oswald','Playfair Display','Merriweather','Baloo 2'];
+const PKEY={one:'price.one',two:'price.two_to_four',five:'price.five_to_nine',ten:'price.ten_plus',test:'price.test_package',excess:'price.test_excess'};
+function vSite(){const n=Object.keys(CH).length;return `<div class="edbar"><button class="btn b-o" data-act="edView" data-v="desk">💻 Laptop</button><button class="btn b-o" data-act="edView" data-v="phone">📱 Phone</button><button class="btn b-o" data-act="edBold">𝐁</button><button class="btn b-o" data-act="edStyle">🎨 Colours & fonts</button><button class="btn b-o" data-act="edFaq">❓ FAQ</button><button class="btn b-o" data-act="edList">☰ All text</button><span class="sep"></span><button class="btn b-o" data-act="edDiscard" ${n?'':'disabled'}>Undo all</button><button class="btn b-g" data-act="edSave" ${n?'':'disabled'}>Save${n?' ('+n+')':''} — go live</button></div>
+  <p class="muted small" style="margin:0 0 8px">Click any text to type over it. Click a photo, price or social icon to change it. Dashed boxes show what's editable. Nothing goes live until you press <b>Save</b>.</p>
+  <div class="frame ${EDF==='phone'?'phone':''}" id="frame"><iframe id="sf" title="Website editor"></iframe></div>`}
+function edBar(){const n=Object.keys(CH).length,s=$('[data-act=edSave]'),u=$('[data-act=edDiscard]');if(s){s.disabled=!n;s.textContent='Save'+(n?' ('+n+')':'')+' — go live'}if(u)u.disabled=!n}
+AFTER.site=()=>{const f=$('#sf');f.src=SITE+'?edit=1&t='+Date.now();f.onload=async()=>{const w=f.contentWindow;for(let i=0;i<60&&!w.__ssReady;i++)await sleep(250);edInit(w)}};
+function edInit(w){const doc=w.document;
+  Object.keys(CH).forEach(k=>edApply(w,k,CH[k]));
+  doc.querySelectorAll('[data-k]').forEach(el=>{el.contentEditable='true';el.spellcheck=true;el.addEventListener('input',()=>{CH[el.dataset.k]=el.innerHTML.replace(/ contenteditable="true"/g,'').trim();edBar()})});
+  doc.addEventListener('click',e=>{const t=e.target;const img=t.closest('[data-k-bg]'),pr=t.closest('[data-p]'),ln=t.closest('[data-k-href]');
+    if(img&&!t.closest('[data-k]')){e.preventDefault();e.stopPropagation();return edImage(img.dataset.kBg)}
+    if(pr){e.preventDefault();e.stopPropagation();return edPrice(pr.dataset.p)}
+    if(ln){e.preventDefault();e.stopPropagation();return edLink(ln.dataset.kHref)}
+    const a=t.closest('a');if(a&&!(a.getAttribute('href')||'').startsWith('#'))e.preventDefault()},true)}
+function edApply(w,k,v){const doc=w.document;if(!doc)return;
+  doc.querySelectorAll(`[data-k="${k}"]`).forEach(el=>{if(el.innerHTML!==v)el.innerHTML=v});
+  doc.querySelectorAll(`[data-k-bg="${k}"]`).forEach(el=>{el.style.backgroundImage='url('+v+')';el.textContent=''});
+  doc.querySelectorAll(`[data-k-href="${k}"]`).forEach(el=>{if(v)el.href=v;el.classList.toggle('empty',!v)});
+  const pk=Object.keys(PKEY).find(x=>PKEY[x]===k);if(pk)doc.querySelectorAll(`[data-p="${pk}"]`).forEach(el=>el.textContent=v);
+  if(k==='color.yellow')doc.documentElement.style.setProperty('--y',v);if(k==='color.ink')doc.documentElement.style.setProperty('--k',v);
+  if(k.startsWith('font.')&&w.SS)w.SS.setFonts(CH['font.head']||cur('font.head')||'Sora',CH['font.body']||cur('font.body')||'Inter')}
+const cur=k=>k in CH?CH[k]:(D.content[k]||'');
+const fw=()=>$('#sf')&&$('#sf').contentWindow;
+function edSet(k,v){CH[k]=v;edApply(fw(),k,v);edBar();closeSheet()}
+function edImage(k){const c=cur(k);sheet(`<h2>Change photo</h2><div class="pv" id="pv" style="background-image:url('${esc(c)}')"></div>
+  <label class="btn b-y full" style="margin-top:12px">📷 Upload / take a photo<input type="file" accept="image/*" id="upf" style="display:none"></label>
+  <label class="l">…or paste an image link</label><input id="upu" placeholder="https://…" value="${esc(c)}"><div class="row" style="margin-top:12px"><button class="btn b-k" data-act="edImgOk" data-k="${k}">Use this photo</button><button class="btn b-o" data-act="close">Cancel</button></div><p class="muted small" id="upm"></p>`);
+  $('#upu').oninput=e=>$('#pv').style.backgroundImage=`url('${e.target.value}')`;
+  $('#upf').onchange=async e=>{const file=e.target.files[0];if(!file)return;$('#upm').textContent='Resizing & uploading…';try{const b64=await shrink(file);const url=await call('adminUpload',[file.name,'image/jpeg',b64]);$('#upu').value=url;$('#pv').style.backgroundImage=`url('${url}')`;$('#upm').textContent='Uploaded ✓ — press "Use this photo"'}catch(err){$('#upm').textContent='⚠ '+err.message+(/Drive|permission|authori/i.test(err.message)?' (photo uploads need a one-time Google Drive permission — see instructions)':'')}}}
+function shrink(file){return new Promise((ok,no)=>{const img=new Image();img.onload=()=>{const m=1600,s=Math.min(1,m/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.84).split(',')[1])};img.onerror=()=>no(new Error('Could not read that image'));img.src=URL.createObjectURL(file)})}
+function edPrice(p){const k=PKEY[p],lbl={one:'Single lesson',two:'2–4 lessons (each)',five:'5–9 lessons (each)',ten:'10+ lessons (each)',test:'Test package',excess:'Test package insurance excess'}[p];
+  sheet(`<h2>${lbl}</h2><p class="muted">This changes the price everywhere — website, calculator, chat and real booking quotes.</p><label class="l">Price ($)</label><input id="prv" type="number" inputmode="decimal" min="0" step="1" value="${esc(cur(k)||fw().SS.P(k))}"><div class="row" style="margin-top:12px"><button class="btn b-k" data-act="edPriceOk" data-k="${k}">Set price</button><button class="btn b-o" data-act="close">Cancel</button></div>`)}
+function edLink(k){const name=k.replace('social.','');sheet(`<h2>${name[0].toUpperCase()+name.slice(1)} link</h2><p class="muted">Paste the full link to your page. Leave empty to hide the icon on the website.</p><input id="lnv" placeholder="https://www.${name==='google'?'google.com/maps/…':name+'.com/…'}" value="${esc(cur(k))}"><div class="row" style="margin-top:12px"><button class="btn b-k" data-act="edLinkOk" data-k="${k}">Save link</button><button class="btn b-o" data-act="close">Cancel</button></div>`)}
+function edStyle(){const y=cur('color.yellow')||'#FFD400',k=cur('color.ink')||'#111316',fh=cur('font.head')||'Sora',fb=cur('font.body')||'Inter';
+  sheet(`<h2>Colours & fonts</h2><div class="g2"><div><label class="l">Brand colour</label><input type="color" id="cy" value="${esc(y)}" style="padding:4px;height:52px"></div><div><label class="l">Dark colour</label><input type="color" id="ck" value="${esc(k)}" style="padding:4px;height:52px"></div></div>
+  <label class="l">Heading font</label><select id="fh">${FONTS.map(f=>`<option${f===fh?' selected':''}>${f}</option>`).join('')}</select><label class="l">Body font</label><select id="fb">${FONTS.map(f=>`<option${f===fb?' selected':''}>${f}</option>`).join('')}</select>
+  <p class="muted small">Changes show in the preview straight away.</p><button class="btn b-o" data-act="edReset">Reset to original look</button> <button class="btn b-k" data-act="close">Done</button>`);
+  const live=(id,key)=>$(id).oninput=e=>{CH[key]=e.target.value;edApply(fw(),key,e.target.value);edBar()};live('#cy','color.yellow');live('#ck','color.ink');live('#fh','font.head');live('#fb','font.body');$('#fh').onchange=$('#fh').oninput;$('#fb').onchange=$('#fb').oninput}
+function edList(){const keys=[...new Set([...Object.keys(D.content),...Object.keys(CH)])].filter(k=>!/^(price|travel|cancel)\./.test(k)).sort();
+  sheet(`<h2>All website text</h2><input id="elq" placeholder="🔎 Search…"><div id="ell" style="margin-top:10px">${keys.map(k=>{const v=cur(k);return `<div class="eli" data-q="${esc((k+' '+v).toLowerCase())}"><label class="l">${esc(k)}</label>${String(v).length>60?`<textarea data-ek="${esc(k)}">${esc(v)}</textarea>`:`<input data-ek="${esc(k)}" value="${esc(v)}">`}</div>`}).join('')}</div><button class="btn b-k full" data-act="close" style="margin-top:14px">Done</button>`);
+  $('#elq').oninput=e=>{const q=e.target.value.toLowerCase();$$('.eli').forEach(x=>x.style.display=x.dataset.q.includes(q)?'':'none')};
+  $$('[data-ek]').forEach(i=>i.oninput=()=>{CH[i.dataset.ek]=i.value;edApply(fw(),i.dataset.ek,i.value);edBar()})}
+function edFaq(){sheet(`<h2>FAQ & chat answers</h2><p class="muted small">"Show" puts it on the website. All answers are used by the chat assistant.</p><div id="fql">${D.faq.map(f=>faqRow(f.Question,f.Answer,f.Keywords,f['Show on website (Y/N)']!=='N')).join('')}</div><button class="btn b-o full" data-act="faqAdd" style="margin-top:8px">➕ Add question</button><button class="btn b-k full" data-act="faqSave" style="margin-top:8px">Save FAQ — go live</button>`)}
+function faqRow(q,a,k,show){return `<div class="card fq" style="background:var(--s)"><input class="fqq" placeholder="Question" value="${esc(q)}"><textarea class="fqa" placeholder="Answer" style="margin-top:8px">${esc(a)}</textarea><input class="fqk" placeholder="Keywords for the chat bot (comma separated)" value="${esc(k)}" style="margin-top:8px"><div class="flag"><span>Show on website</span><label class="sw"><input type="checkbox" class="fqs" ${show?'checked':''}><span></span></label></div><button class="btn b-r" data-act="faqDel">Delete</button></div>`}
+/* ---------- bot / records / settings ---------- */
+function vBot(){const q=D.chat.slice().reverse(),open=q.filter(c=>c['Bot Answered?']==='N'&&c['Added to FAQ?']!=='Y');
+  return `<h2>Teach the chat assistant</h2><p class="muted">Questions it couldn't answer. Type the answer once — it learns it.</p>${open.map(c=>`<div class="card"><div class="muted small">${esc(c.Time)}</div><b>${esc(c.Question)}</b><textarea placeholder="Your answer…" style="margin-top:8px" id="ta${c._row}"></textarea><input placeholder="Keywords (optional)" id="tk${c._row}" style="margin-top:8px"><button class="btn b-k full" data-act="teach" data-row="${c._row}" style="margin-top:8px">Teach bot</button></div>`).join('')||'<div class="card empty">Nothing to teach right now 🎉</div>'}
+  <details><summary>All chat questions (${q.length})</summary>${q.slice(0,100).map(c=>`<div class="muted small" style="padding:5px 0;border-bottom:1px solid var(--l)">${esc(c.Time)} · ${c['Bot Answered?']==='Y'?'✓':'✕'} ${esc(c.Question)}</div>`).join('')}</details>`}
+function vRecords(){return `<h2>Records</h2><div class="card"><b>Legal records — kept 5 years</b><p class="muted">NSW requires each student's name, address, phone, lesson dates & times and the car rego to be kept for at least 5 years. Everything is stored in your Google Sheet automatically. Never delete rows.</p><a class="btn b-k" target="_blank" href="${esc(D.sheetUrl)}">Open records sheet</a></div>
+  <div class="card"><h3>Activity log</h3>${D.events.slice().reverse().slice(0,150).map(e=>`<div class="muted small" style="padding:6px 0;border-bottom:1px solid var(--l)">${esc(e.Time)} · ${esc(e.Email||'visitor')} · <b>${esc(e.Event)}</b> ${esc(e.Detail)}</div>`).join('')}</div>`}
+function vSettings(){return `<h2>Settings</h2><div class="card"><h3>Admin PIN</h3><p class="muted">Use 6+ digits. Only share it with RJ.</p><div class="row" style="flex-wrap:nowrap"><input id="npin" type="password" inputmode="numeric" placeholder="New PIN"><button class="btn b-k" data-act="pin">Change</button></div></div>
+  ${D.settings.map(s=>`<div class="card"><label class="l" style="margin-top:0">${esc(s.Key)}</label><div class="muted small" style="margin-bottom:6px">${esc(s.Notes)}</div><div class="row" style="flex-wrap:nowrap"><input value="${esc(s.Value)}" id="set_${esc(s.Key)}"><button class="btn b-y" data-act="setSave" data-k="${esc(s.Key)}">Save</button></div></div>`).join('')}
+  <div class="card"><h3>Add to home screen</h3><p class="muted">iPhone: Share → Add to Home Screen. Android: ⋮ → Add to Home screen. It then opens like an app.</p><button class="btn b-o" data-act="logout">Log out on this device</button></div>`}
+/* ---------- actions ---------- */
+const ACT={
+ more(){sheet(`<h2>More</h2><div class="list">${TABS.filter(t=>!['inbox','lessons','book','students'].includes(t[0])).map(([k,i,l])=>`<button class="item" data-go="${k}"><span>${i} ${l}</span><span>›</span></button>`).join('')}</div>`)},
+ close(){closeSheet()},
+ confirm(d){const b=B(d.id);sheet(`<h2>Confirm lesson?</h2><p><b>${esc(b.Name)}</b><br>${fmtD(b.Date,1)} · ${fmtT(b.Start)}–${fmtT(b.End)}<br>📍 ${esc(b.Pickup)}</p><p class="muted">${realEmail(b.Email)?'The student gets a confirmation email with PayID details. ':''}It's added to your Google Calendar.</p><button class="btn b-g full" data-act="confirmOk" data-id="${b.ID}">✓ Confirm</button>`)},
+ confirmOk(d){run('adminConfirm',[d.id],'Confirmed ✓')},
+ decline(d){const b=B(d.id);sheet(`<h2>Decline ${esc(b.Name)}?</h2><div class="chips">${['That time is no longer available.','That address is outside our area.','Please call us to arrange a time.'].map(r=>`<button class="chip" data-act="decR" data-v="${esc(r)}">${esc(r)}</button>`).join('')}</div><label class="l">Message to student (optional)</label><textarea id="decT"></textarea><button class="btn b-r full" data-act="declineOk" data-id="${b.ID}" style="margin-top:12px">Decline booking</button>`)},
+ decR(d){$('#decT').value=d.v},
+ declineOk(d){run('adminDecline',[d.id,$('#decT').value],'Declined')},
+ cancel(d){const b=B(d.id),c=D.content,P=k=>+c[k],hl=(dObj(b.Date).getTime()+mins(b.Start)*60000-Date.now())/3600000,st=D.students.find(s=>s.email===b.Email)||{};
+  const lv=b.Purchase==='test'?+b['Unit Price']:(+b['Unit Price']||+st.creditUnit||P('price.one'))*(+b.Hours||1),pct=hl>P('cancel.free_hours')?0:hl>P('cancel.late_hours')?P('cancel.late_pct'):P('cancel.noshow_pct');
+  sheet(`<h2>Cancel ${esc(b.Name)}</h2><p class="muted">${fmtD(b.Date,1)} · ${fmtT(b.Start)} · ${Math.max(0,Math.round(hl))} hrs from now</p>
+  <div class="list"><button class="item" data-act="cancelOk" data-id="${b.ID}" data-w="student"><span><b>Student cancelled</b><br><span class="muted">Fee ${money(lv*pct/100)} (${pct}% by notice period)</span></span><span>›</span></button>
+  <button class="item" data-act="cancelOk" data-id="${b.ID}" data-w="instructor"><span><b>I need to cancel</b><br><span class="muted">No fee for the student</span></span><span>›</span></button>
+  <button class="item" data-act="cancelOk" data-id="${b.ID}" data-w="noshow"><span><b>Student didn't show</b><br><span class="muted">Fee ${money(lv*P('cancel.noshow_pct')/100)}</span></span><span>›</span></button></div>
+  <label class="l">Message to student (optional)</label><textarea id="canT"></textarea><p class="muted small">Lesson hours go back on the student's account for re-booking.</p>`)},
+ cancelOk(d){run('adminCancel',[d.id,d.w,$('#canT').value],'Cancelled')},
+ async move(d){const b=B(d.id);sheet(`<h2>Move ${esc(b.Name)}'s lesson</h2><p class="muted">Now: ${fmtD(b.Date,1)} · ${fmtT(b.Start)}. Only times that fit around your other lessons (with drive time) are shown.</p><div id="mvd"><p class="muted">Checking the diary…</p></div><div id="mvt"></div><button class="btn b-k full" id="mvGo" data-act="moveOk" data-id="${b.ID}" disabled style="margin-top:12px">Move lesson</button>`);
+  try{const days=await call('adminFreeSlotsRange',[d.id,D.today,14]);ACT._mv={days,date:'',time:''};$('#mvd').innerHTML=daysHtml(days,'','mvDay')}catch(e){$('#mvd').innerHTML='<div class="warn">'+esc(e.message)+'</div>'}},
+ mvDay(d){const m=ACT._mv;m.date=d.v;m.time='';$('#mvd').innerHTML=daysHtml(m.days,d.v,'mvDay');$('#mvt').innerHTML=timesHtml(m.days.find(x=>x.date===d.v),'','mvTime');$('#mvGo').disabled=true},
+ mvTime(d){const m=ACT._mv;m.time=d.v;$('#mvt').innerHTML=timesHtml(m.days.find(x=>x.date===m.date),d.v,'mvTime');$('#mvGo').disabled=false;$('#mvGo').textContent='Move to '+fmtD(m.date)+' '+fmtT(d.v)},
+ moveOk(d){const m=ACT._mv;run('adminReschedule',[d.id,m.date,m.time],'Moved ✓ — student emailed')},
+ paid(d){const b=B(d.id),x=due(b);sheet(`<h2>Payment from ${esc(b.Name)}</h2><p class="muted">Due: ${money(x)} · ref ${esc(b.ID)}</p><label class="l">Amount received ($)</label><input id="pdv" type="number" inputmode="decimal" value="${x}"><button class="btn b-y full" data-act="paidOk" data-id="${b.ID}" style="margin-top:12px">Mark as received</button>`)},
+ paidOk(d){const v=+$('#pdv').value;if(!(v>0))return toast('Enter an amount');run('adminMarkPaid',[d.id,v],'Payment recorded ✓')},
+ notes(d){const b=B(d.id);let sk={};try{sk=JSON.parse(b.Skills||'{}')}catch(e){}ACT._sk=sk;
+  sheet(`<h2>Lesson notes · ${esc(b.Name)}</h2><p class="muted">${fmtD(b.Date,1)} · ${fmtT(b.Start)}</p><h3 style="margin-top:10px">Skills (tap stars)</h3>${SKILLS.map(s=>`<div class="sk"><span>${s}</span><span class="stars" data-s="${esc(s)}">${[1,2,3,4,5].map(n=>`<button class="${(+sk[s]||0)>=n?'on':''}" data-act="star" data-s="${esc(s)}" data-v="${n}">★</button>`).join('')}</span></div>`).join('')}
+  <label class="l">What you covered / what to work on</label><textarea id="nN">${esc(b['Lesson Notes'])}</textarea><label class="l">Areas / route driven</label><input id="nR" value="${esc(b['Route / Areas'])}" placeholder="e.g. Thornton → East Maitland roundabouts">
+  <div class="g2"><div><label class="l">Odometer start</label><input id="nO1" inputmode="numeric" value="${esc(b['Odometer Start'])}"></div><div><label class="l">Odometer end</label><input id="nO2" inputmode="numeric" value="${esc(b['Odometer End'])}"></div></div>
+  <div class="g2" style="margin-top:12px"><button class="btn" data-act="notesOk" data-id="${b.ID}">Save</button><button class="btn b-k" data-act="notesOk" data-id="${b.ID}" data-done="1">Save & complete</button></div>`)},
+ star(d){ACT._sk[d.s]=+d.v;$$(`.stars[data-s="${CSS.escape(d.s)}"] button`).forEach((x,i)=>x.classList.toggle('on',i<d.v))},
+ notesOk(d){run('adminSaveLesson',[d.id,{skills:ACT._sk,notes:$('#nN').value,route:$('#nR').value,odoStart:$('#nO1').value,odoEnd:$('#nO2').value,complete:!!d.done}],d.done?'Lesson completed ✓':'Saved ✓')},
+ bookFor(d){newBK(D.students.find(s=>s.email===d.email));go('book')},
+ stuEdit(d){const s=D.students.find(x=>x.email===d.email),F=[['Name','name'],['Phone','phone'],['Address','address'],['Licence No','licence'],['Licence State','licenceState'],['Licence Type','licenceType'],['Licence Expiry','licenceExpiry','date'],['Test Centre','testCentre'],['Test Date','testDate'],['Test Booking Ref','testRef'],['DOB','dob','date'],['Emergency Contact','emergency'],['Flags / Safety Notes','flags']];
+  sheet(`<h2>Edit ${esc(s.name)}</h2>${F.map(f=>`<label class="l">${f[0]}</label><input data-sk="${f[0]}" type="${f[2]||'text'}" value="${esc(s[f[1]])}">`).join('')}<button class="btn b-k full" data-act="stuOk" data-email="${esc(s.email)}" style="margin-top:12px">Save</button>`)},
+ stuOk(d){const o={};$$('[data-sk]').forEach(i=>o[i.dataset.sk]=i.value);run('adminSaveStudent',[d.email,o],'Saved ✓')},
+ /* booking wizard */
+ bkPick(d){newBK(D.students.find(s=>s.email===d.email));render()},
+ bkClear(){newBK();render()},
+ async bkFind(){const q=$('#bka').value.trim();if(q.length<4)return toast('Type the street and suburb');BK.address=q;$('#bkares').innerHTML='<p class="muted">Searching…</p>';
+  try{const d=await pub({action:'geocode',q});ACT._ar=d.results;$('#bkares').innerHTML=d.results.map((r,i)=>`<button class="item" data-act="bkAddrPick" data-i="${i}"><span>📍 ${esc(r.address)}</span><span>›</span></button>`).join('')||'<p class="muted">No match — add the suburb.</p>'}catch(e){$('#bkares').innerHTML='<div class="warn">'+esc(e.message)+'</div>'}},
+ bkAddrPick(d){BK.address=ACT._ar[+d.i].address;BK.addrOk=true;BK.days=null;BK.quote=null;BK.date='';BK.time='';bkRefresh()},
+ bkAddr(){BK.addrOk=false;BK.days=null;BK.quote=null;BK.date='';BK.time='';render()},
+ async bkFindD(){const q=$('#bkd').value.trim();if(q.length<4)return;$('#bkdres').innerHTML='<p class="muted">Searching…</p>';try{const d=await pub({action:'geocode',q});ACT._dr=d.results;$('#bkdres').innerHTML=d.results.map((r,i)=>`<button class="item" data-act="bkDropPick" data-i="${i}"><span>🏁 ${esc(r.address)}</span><span>›</span></button>`).join('')}catch(e){toast('⚠ '+e.message)}},
+ bkDropPick(d){BK.dropoff=ACT._dr[+d.i].address;BK.days=null;BK.time='';bkRefresh()},
+ bkPkg(d){BK.purchase=d.v;if((d.v==='1'||d.v==='test')&&BK.hours==2)BK.hours=1;BK.quote=null;bkRefresh()},
+ bkHrs(d){if(d.v==='2'&&(BK.purchase==='1'||BK.purchase==='test'))return toast('2-hour lessons need 2+ lessons');BK.hours=+d.v;BK.days=null;BK.time='';BK.quote=null;bkRefresh()},
+ bkDay(d){BK.date=d.v;BK.time='';render()},
+ bkTime(d){BK.time=d.v;render()},
+ async bkGo(){const b=BK,st=b.st;const p={name:st?st.name:b.name,phone:st?st.phone:b.phone,email:st?(realEmail(st.email)?st.email:''):b.email,licence:st?st.licence:b.licence,licenceState:st?st.licenceState:b.licenceState,licenceExpiry:st?st.licenceExpiry:b.licenceExpiry,
+   address:b.address,dropoff:b.dropoff,date:b.date,time:b.time,hours:b.hours,purchase:b.purchase,notes:b.notes};
+  if(!p.name||!p.phone)return toast('Add the student name and mobile');
+  toast('Booking…',60000);try{D=await call('adminManualBooking',[p]);BK=null;TAB='lessons';render();toast('Booked & confirmed ✓')}catch(e){toast('⚠ '+e.message,6000);bkRefresh()}},
+ /* hours */
+ saveHours(){const rows=[];let bad='';$$('.hrow').forEach(r=>{const on=r.querySelector('.hon').checked,s=r.querySelector('.hs').value,e=r.querySelector('.he').value;if(on&&mins(e)<=mins(s))bad=r.dataset.day;rows.push([r.dataset.day,on?s:'',on?e:''])});
+  if(bad)return toast('⚠ '+bad+': finish time must be after start time');run('adminSaveTable',['Availability',rows],'Working hours saved ✓')},
+ addOff(){const dt=$('#toD').value,all=$('#toAll').checked,s=$('#toS').value,e=$('#toE').value;if(!dt)return toast('Pick a date');if(!all&&mins(e)<=mins(s))return toast('⚠ "Until" must be after "From"');
+  const clash=D.bookings.filter(b=>b.Date===dt&&['Confirmed','Pending'].includes(b.Status)&&(all||(mins(b.Start)<mins(e)&&mins(b.End)>mins(s))));
+  if(clash.length&&!confirm(`${clash.length} lesson(s) already booked in that time (${clash.map(b=>b.Name+' '+fmtT(b.Start)).join(', ')}). Block anyway? You'll need to move or cancel them.`))return;
+  const rows=D.blocked.map(b=>[b['Date (yyyy-mm-dd)'],b['Start (blank = all day)'],b.End,b.Reason]);rows.push([dt,all?'':s,all?'':e,$('#toR').value]);run('adminSaveTable',['Blocked',rows],'Time blocked ✓')},
+ delOff(d){const rows=D.blocked.filter(b=>String(b._row)!==d.row).map(b=>[b['Date (yyyy-mm-dd)'],b['Start (blank = all day)'],b.End,b.Reason]);run('adminSaveTable',['Blocked',rows],'Removed ✓')},
+ /* website */
+ edView(d){EDF=d.v;$('#frame').classList.toggle('phone',d.v==='phone')},
+ edBold(){const w=fw();if(w)w.document.execCommand('bold')},
+ edStyle(){edStyle()},edList(){edList()},edFaq(){edFaq()},
+ edImgOk(d){const v=$('#upu').value.trim();if(!/^https?:\/\//.test(v))return toast('Upload a photo or paste a link');edSet(d.k,v)},
+ edPriceOk(d){const v=$('#prv').value;if(!(+v>=0)||v==='')return toast('Enter a number');edSet(d.k,String(+v))},
+ edLinkOk(d){let v=$('#lnv').value.trim();if(v&&!/^https?:\/\//.test(v))v='https://'+v;edSet(d.k,v)},
+ edReset(){['color.yellow','color.ink','font.head','font.body'].forEach(k=>CH[k]={'color.yellow':'#FFD400','color.ink':'#111316','font.head':'Sora','font.body':'Inter'}[k]);['color.yellow','color.ink','font.head','font.body'].forEach(k=>edApply(fw(),k,CH[k]));edBar();closeSheet()},
+ edDiscard(){if(!confirm('Undo all unsaved website changes?'))return;CH={};render()},
+ async edSave(){const n=Object.keys(CH).length;toast('Saving…',60000);try{await call('adminSaveContent',[CH]);Object.assign(D.content,CH);CH={};edBar();toast('✓ '+n+' change'+(n>1?'s':'')+' live on the website')}catch(e){toast('⚠ '+e.message,6000)}},
+ faqAdd(){$('#fql').insertAdjacentHTML('beforeend',faqRow('','','',true))},
+ faqDel(d,el){el.closest('.fq').remove()},
+ faqSave(){const rows=$$('.fq').map(f=>[f.querySelector('.fqq').value.trim(),f.querySelector('.fqa').value.trim(),f.querySelector('.fqk').value.trim(),f.querySelector('.fqs').checked?'Y':'N']).filter(r=>r[0]&&r[1]);run('adminSaveTable',['FAQ',rows],'FAQ saved ✓')},
+ /* misc */
+ teach(d){const a=$('#ta'+d.row).value.trim();if(!a)return toast('Type an answer');run('adminTeach',[+d.row,a,$('#tk'+d.row).value],'Bot taught ✓')},
+ setSave(d){run('adminSaveKV',['Settings',d.k,$('#set_'+CSS.escape(d.k)).value],'Saved ✓')},
+ async pin(){const v=$('#npin').value.trim();if(!/^\d{6,}$/.test(v))return toast('Use 6 or more digits');toast('Saving…');try{await call('adminSaveKV',['Settings','adminPin',v]);PIN=v;try{if(localStorage.ssPin)localStorage.ssPin=v}catch(e){}toast('PIN changed ✓ — tell RJ the new PIN')}catch(e){toast('⚠ '+e.message)}},
+ logout(){try{localStorage.removeItem('ssPin')}catch(e){}location.reload()}
+};
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();return go(g.dataset.go)}const a=e.target.closest('[data-act]');if(a&&ACT[a.dataset.act]&&!a.disabled){e.preventDefault();ACT[a.dataset.act](a.dataset,a)}});
+document.addEventListener('change',e=>{const f=e.target.closest('[data-flag]');if(f)run('adminSetFlag',[f.dataset.id,f.dataset.flag,f.checked?'Y':'N'],'Saved ✓')});
+addEventListener('beforeunload',e=>{if(Object.keys(CH).length){e.preventDefault();e.returnValue=''}});
 </script>
 </body>
 </html>
