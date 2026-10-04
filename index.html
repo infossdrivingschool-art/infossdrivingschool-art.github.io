@@ -17,8 +17,8 @@
 <style>
 :root{--y:#FFD400;--k:#111316;--k2:#2a2d33;--m:#5d636d;--bg:#fff;--s:#f6f6f2;--l:#e6e6e0;--g:#1f9d55;--wa:#25D366;--r:20px}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
-html,body{overflow-x:clip}body{font-family:Inter,system-ui,sans-serif;color:var(--k);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased;transition:background-color .8s ease;overflow-x:hidden}
-h1,h2,h3{font-family:Sora,Inter,sans-serif;line-height:1.12;letter-spacing:-.02em}
+html,body{overflow-x:clip}body{font-family:var(--fb,Inter),system-ui,sans-serif;color:var(--k);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased;transition:background-color .8s ease;overflow-x:hidden}
+h1,h2,h3{font-family:var(--fh,Sora),Inter,sans-serif;line-height:1.12;letter-spacing:-.02em}
 a{color:inherit}img{max-width:100%;display:block}
 .wrap{max-width:1140px;margin:0 auto;padding:0 20px}section{padding:84px 0;position:relative}
 .eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--m);margin-bottom:10px}
@@ -111,6 +111,14 @@ label{display:block;font-weight:600;font-size:.9rem;margin:12px 0 6px}
 .lg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}@media(max-width:800px){.lg{grid-template-columns:1fr}}
 details{border-bottom:1.5px solid var(--l);padding:18px 0}summary{font-weight:700;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px}
 summary::-webkit-details-marker{display:none}summary:after{content:"+";font-size:1.4rem;line-height:1;transition:transform .3s}details[open] summary:after{transform:rotate(45deg)}details p{color:var(--m);margin-top:10px}
+/* social */
+.social{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.social a{width:42px;height:42px;border-radius:12px;background:#24272d;display:grid;place-items:center;transition:transform .2s,background .2s}
+.social a:hover{transform:translateY(-3px);background:var(--y)}.social a:hover svg{fill:var(--k)}.social svg{width:20px;height:20px;fill:#fff}.social a.empty{display:none}
+body.editing .social a.empty{display:grid;opacity:.45;outline:2px dashed var(--y)}
+body.editing [data-k]:hover,body.editing [data-k]:focus{outline:2px dashed #2f7cf6;outline-offset:3px;cursor:text}
+body.editing [data-k-bg],body.editing [data-p],body.editing [data-k-href]{cursor:pointer}
+body.editing [data-k-bg]:hover,body.editing [data-p]:hover,body.editing [data-k-href]:hover{outline:3px dashed #2f7cf6;outline-offset:3px}
+body.editing .cur,body.editing .tip{display:none!important}
 footer{background:var(--k);color:#c9cbd1;padding:46px 0 120px;font-size:.9rem}footer a{color:#fff}footer .wrap{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between}
 /* reveal 3D */
 .rv{opacity:0;transform:perspective(900px) rotateX(18deg) translateY(30px);transition:opacity .8s,transform .8s cubic-bezier(.2,.7,.2,1)}.rv.in{opacity:1;transform:none}
@@ -344,7 +352,7 @@ footer{background:var(--k);color:#c9cbd1;padding:46px 0 120px;font-size:.9rem}fo
 
 <footer><div class="wrap">
   <div><div class="brand" style="color:#fff;margin-bottom:10px"><span class="lp">L</span><span data-k="brand.full">Smart Start Driving School</span></div><span data-k="foot.text">Automatic driving lessons · Thornton NSW 2322 · Serving Maitland, Raymond Terrace, Kurri Kurri, Cessnock & Newcastle.</span></div>
-  <div>📞 <a href="tel:+61455585556" data-k="contact.phone2">0455 585 556</a><br>✉️ <a href="mailto:info.ssdrivingschool@gmail.com" data-k="contact.email">info.ssdrivingschool@gmail.com</a><br><br><small>Photos: Unsplash · © <span id="yr"></span> Smart Start Driving School</small></div>
+  <div>📞 <a href="tel:+61455585556" data-k="contact.phone2">0455 585 556</a><br>✉️ <a href="mailto:info.ssdrivingschool@gmail.com" data-k="contact.email">info.ssdrivingschool@gmail.com</a><div class="social" id="social"><a data-k-href="social.instagram" href="" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 7a5 5 0 100 10 5 5 0 000-10zm0 8.2a3.2 3.2 0 110-6.4 3.2 3.2 0 010 6.4zM17.3 5.5a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4zM12 3.6c2.7 0 3 0 4.1.1 2.7.1 4 1.4 4.1 4.1.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c-.1 2.7-1.4 4-4.1 4.1-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-2.7-.1-4-1.4-4.1-4.1C3.7 15 3.6 14.7 3.6 12s0-3 .1-4.1c.1-2.7 1.4-4 4.1-4.1C8.9 3.7 9.3 3.6 12 3.6zM12 2C9.3 2 8.9 2 7.8 2.1 4.2 2.2 2.2 4.2 2.1 7.8 2 8.9 2 9.3 2 12s0 3.1.1 4.2c.1 3.6 2.1 5.6 5.7 5.7 1.1.1 1.5.1 4.2.1s3.1 0 4.2-.1c3.6-.1 5.6-2.1 5.7-5.7.1-1.1.1-1.5.1-4.2s0-3.1-.1-4.2c-.1-3.6-2.1-5.6-5.7-5.7C15.1 2 14.7 2 12 2z"/></svg></a><a data-k-href="social.facebook" href="" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7A10 10 0 0022 12z"/></svg></a><a data-k-href="social.tiktok" href="" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24"><path d="M16.6 5.8A4.3 4.3 0 0115.5 3h-3.1v12.4a2.6 2.6 0 11-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 104.9 5.7V9a7.3 7.3 0 004.3 1.4V7.3a4.3 4.3 0 01-3.2-1.5z"/></svg></a><a data-k-href="social.youtube" href="" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24"><path d="M21.6 7.2a2.5 2.5 0 00-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 002.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 001.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 001.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg></a><a data-k-href="social.google" href="" target="_blank" rel="noopener" aria-label="Google reviews" title="Google reviews"><svg viewBox="0 0 24 24"><path d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 01-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3zM12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0012 22zM6.4 14a6 6 0 010-3.9V7.4H3.1a10 10 0 000 9.1L6.4 14zM12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 003.1 7.4L6.4 10C7.2 7.7 9.4 6 12 6z"/></svg></a><a data-k-href="social.whatsapp" href="" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.8 1c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.2z"/></svg></a></div><br><small>Photos: Unsplash · © <span id="yr"></span> Smart Start Driving School</small></div>
 </div></footer>
 
 <div class="mbar"><a class="btn b-k" href="tel:+61455585556">📞 Call</a><a class="btn b-y" href="#book">📅 Book</a></div>
@@ -374,19 +382,25 @@ function zoneFee(z){return [0,P('travel.tier1_fee'),P('travel.tier2_fee')][z]}
 function api(params,tries){tries=tries||0;var u=API+'?'+Object.keys(params).map(function(k){return k+'='+encodeURIComponent(params[k])}).join('&');return fetch(u).then(function(r){return r.text()}).then(function(t){var d;try{d=JSON.parse(t)}catch(e){if(tries<2)return new Promise(function(ok){setTimeout(ok,1200)}).then(function(){return api(params,tries+1)});throw new Error('Our booking system is busy — please try again in a minute.')}if(!d.ok)throw new Error(d.error||'Error');return d})}
 function post(body){return fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}).then(function(r){return r.text()}).then(function(t){try{return JSON.parse(t)}catch(e){return {ok:false,unsure:true,error:'We may have received your request but could not confirm it. Please check your email (and spam) in 2 minutes before trying again, or call 0455 585 556.'}}})}
 function me(){try{return localStorage.getItem('ss_email')||''}catch(e){return ''}}
-function track(ev,detail){if(API)post({action:'event',email:me(),event:ev,detail:detail||location.hash}).catch(function(){})}
+function track(ev,detail){if(API&&!EDIT)post({action:'event',email:me(),event:ev,detail:detail||location.hash}).catch(function(){})}
 
 /* ===== editable content (Google Sheet → Content tab) ===== */
+function setFonts(h,b){h=h||'Sora';b=b||'Inter';var r=document.documentElement.style;r.setProperty('--fh',"'"+h+"'");r.setProperty('--fb',"'"+b+"'");
+  var id='gf-'+(h+b).replace(/\W/g,'');if((h!=='Sora'||b!=='Inter')&&!document.getElementById(id)){var l=document.createElement('link');l.id=id;l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(h)+':wght@600;800&family='+encodeURIComponent(b)+':wght@400;600;700&display=swap';document.head.appendChild(l)}}
+var EDIT=/[?&]edit=1/.test(location.search);
 function applyContent(live){
   var defaults={};
   $$('[data-k]').forEach(function(el){var k=el.dataset.k;defaults[k]=el.innerHTML.trim();if(C[k]!=null&&C[k]!=='')el.innerHTML=C[k]});
   $$('[data-k-bg]').forEach(function(el){var k=el.dataset.kBg,m=(el.style.backgroundImage||'').match(/url\("?([^")]+)"?\)/);defaults[k]=m?m[1]:'';if(C[k]){el.style.backgroundImage='url('+C[k]+')';el.textContent=''}});
   ['color.yellow','color.ink'].forEach(function(k){defaults[k]=k==='color.yellow'?'#FFD400':'#111316';if(C[k])document.documentElement.style.setProperty(k==='color.yellow'?'--y':'--k',C[k])});
+  $$('[data-k-href]').forEach(function(el){var k=el.dataset.kHref;defaults[k]='';var v=C[k]||'';if(v)el.href=v;else el.removeAttribute('href');el.classList.toggle('empty',!v)});
+  defaults['font.head']='Sora';defaults['font.body']='Inter';setFonts(C['font.head'],C['font.body']);
   Object.keys(DEF_PRICES).forEach(function(k){PRICES[k]=C[k]!=null&&C[k]!==''?C[k]:DEF_PRICES[k]});
   var missing={};Object.keys(defaults).forEach(function(k){if(!(k in C))missing[k]=defaults[k]});
   if(live&&API&&Object.keys(missing).length)post({action:'seed',keys:missing}).catch(function(){});
   $$('[data-p]').forEach(function(el){el.textContent={one:P('price.one'),two:P('price.two_to_four'),five:P('price.five_to_nine'),ten:P('price.ten_plus'),test:P('price.test_package'),excess:P('price.test_excess')}[el.dataset.p]});
   renderFaq();calc();buildPkgs();
+  if(live)window.__ssReady=true;
 }
 function renderFaq(){var f=(FAQ.length?FAQ:DEF_FAQ).filter(function(x){return x.show});$('#faqList').innerHTML=f.map(function(x){return '<details class="rv in"><summary>'+esc(x.q)+'</summary><p>'+esc(x.a)+'</p></details>'}).join('')}
 
@@ -502,7 +516,7 @@ $('#fab').onclick=toggleChat;
 /* ===== fun & motion ===== */
 var TIPS=[['💡 Pro tip','Mirror → Signal → Mirror → Manoeuvre. Every. Single. Time.'],['😄 Fun fact','Automatic cars can\'t stall. That\'s one less thing to worry about!'],['🛑 Stop signs','A STOP sign means a full stop — wheels not moving — even if the road looks empty.'],['🌙 Night hours','You need 20 night hours in your logbook. Book an evening lesson to tick some off.'],['🔄 Roundabouts','Give way to vehicles already in the roundabout, and signal left before you exit.'],['🎯 Head checks','Mirrors don\'t show everything. A quick head check covers your blind spot.'],['☔ Wet roads','Double your following distance in the rain — at least 4 seconds.'],['🧠 Quiz time','Think you know the road rules? Try our 10-question quiz below!']],ti=0,tipShown=0;
 function tip(){if(tipShown>=4||$('#chat').classList.contains('open'))return;var t=TIPS[ti++%TIPS.length];$('#tipT').textContent=t[0];$('#tipB').textContent=t[1];$('#tip').classList.add('show');tipShown++;setTimeout(function(){$('#tip').classList.remove('show')},6500)}
-setTimeout(tip,9000);setInterval(tip,32000);$('#tip').onclick=function(){this.classList.remove('show')};
+if(!EDIT)setTimeout(tip,9000);if(!EDIT)setInterval(tip,32000);$('#tip').onclick=function(){this.classList.remove('show')};
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});$$('.rv').forEach(function(el){io.observe(el)});
 var bgio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)document.body.style.backgroundColor=e.target.dataset.bg})},{threshold:.45});$$('section[data-bg]').forEach(function(s){bgio.observe(s)});
 addEventListener('scroll',function(){var h=document.documentElement,p=h.scrollTop/(h.scrollHeight-innerHeight||1);$('#roadFill').style.width=(p*100)+'%';$('#roadCar').style.left=Math.min(98,p*100)+'%';$('#hcar').style.left=(8+Math.min(1,h.scrollTop/500)*80)+'%';
@@ -516,6 +530,7 @@ $('#yr').textContent=new Date().getFullYear();
 
 /* ===== load live content ===== */
 applyContent();
+if(EDIT){document.body.classList.add('editing');window.SS={get C(){return C},setFonts:setFonts,applyContent:applyContent,P:P}}
 if(API)api({action:'content'}).then(function(d){C=d.content||{};FAQ=d.faq||[];applyContent(true);track('Visited site',document.referrer||'direct')}).catch(function(){});
 </script>
 </body>
