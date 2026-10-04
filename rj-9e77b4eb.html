@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>Smart Start Admin</title><link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{--y:#FFD400;--k:#111316;--m:#5d636d;--l:#e6e6e0;--s:#f6f6f2;--g:#1f9d55;--r:#c0392b}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif;background:var(--s);color:var(--k);font-size:15px}
+header{position:sticky;top:0;z-index:5;background:var(--k);color:#fff;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.lp{width:30px;height:30px;border-radius:6px;background:var(--y);color:var(--k);display:grid;place-items:center;font-weight:900;border:2px solid #fff}
+header b{flex:1}header button{background:none;border:1px solid #555;color:#fff;border-radius:8px;padding:6px 10px}
+nav{display:flex;overflow-x:auto;gap:6px;padding:10px;background:#fff;border-bottom:1px solid var(--l);position:sticky;top:54px;z-index:4}
+nav button{flex-shrink:0;border:1.5px solid var(--l);background:#fff;border-radius:999px;padding:8px 13px;font-weight:600;font-size:14px}
+nav button.on{background:var(--k);color:var(--y);border-color:var(--k)}
+main{padding:12px;max-width:760px;margin:0 auto}
+.card{background:#fff;border:1px solid var(--l);border-radius:14px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 4px;font-size:16px}.muted{color:var(--m);font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.sp{justify-content:space-between}
+.btn{border:none;border-radius:10px;padding:10px 12px;font-weight:700;font-size:14px;background:var(--s);color:var(--k);text-decoration:none;display:inline-block}
+.b-y{background:var(--y)}.b-k{background:var(--k);color:#fff}.b-g{background:var(--g);color:#fff}.b-r{background:#fde8e6;color:var(--r)}
+.pill{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--s)}
+.Pending{background:#fff2b3}.Confirmed{background:#d9f5e4;color:#11663a}.Completed{background:#e3ecff;color:#2848a8}.Cancelled,.Declined,.No-show{background:#fde8e6;color:var(--r)}
+input,select,textarea{width:100%;padding:10px;border:1.5px solid var(--l);border-radius:10px;font:inherit;background:#fff}
+label{font-size:13px;font-weight:600;color:var(--m);display:block;margin:8px 0 4px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#fff;border:1px solid var(--l);border-radius:14px;padding:12px}
+.stat b{display:block;font-size:22px}.hide{display:none}
+details summary{cursor:pointer;font-weight:700;padding:6px 0}
+.sk{display:grid;grid-template-columns:1fr 130px;gap:6px;align-items:center;font-size:14px}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--k);color:#fff;padding:12px 16px;border-radius:12px;display:none;z-index:9;max-width:90vw}
+pre{white-space:pre-wrap;font-family:inherit;background:var(--s);padding:10px;border-radius:10px;font-size:13px}
+.warn{background:#fff2b3;border-radius:8px;padding:6px 9px;font-size:13px;margin-top:6px}
+</style>
+</head>
+<body>
+<header><span class="lp">L</span><b>Smart Start Admin</b><button onclick="load()">↻</button></header>
+<div id="login" style="padding:40px 20px;max-width:360px;margin:0 auto">
+  <h2>Enter admin PIN</h2><input id="pin" type="password" inputmode="numeric" placeholder="PIN"><br><br>
+  <button class="btn b-k" style="width:100%" onclick="login()">Open</button><p class="muted" id="lerr"></p>
+</div>
+<nav id="nav" class="hide"></nav>
+<main id="app" class="hide"></main>
+<div id="toast"></div>
+<script>
+var PIN='', D=null, TAB='inbox';
+var SKILLS=['Steering & control','Mirrors & observation','Speed management','Gap selection','Intersections & roundabouts','Lane changes','Parking','Reverse / 3-point turn','Hazard awareness','Road rules'];
+var TABSDEF=[['inbox','📥 Inbox'],['upcoming','📅 Lessons'],['students','🎓 Students'],['money','💰 Money'],['new','➕ Book'],['site','🖊 Website'],['bot','🤖 Bot'],['hours','🕒 Hours'],['records','🗂 Records'],['settings','⚙️ Settings']];
+function $(s){return document.querySelector(s)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(m){var t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(function(){t.style.display='none'},3500)}
+function money(n){n=+n||0;return '$'+(Math.round(n*100)/100).toFixed(2).replace(/\.00$/,'')}
+var API='https://script.google.com/macros/s/AKfycbwDzfI8GrcDGzRFAqjMM83Z2L5Dmupv8_P7K8cV6q8FGxfFqYOYhqO9dD94R6wi7sEG4w/exec';
+function call(fn,args,tries){tries=tries||0;return fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'admin',fn:fn,pin:PIN,args:args||[]})}).then(function(r){return r.text()}).then(function(t){var d;try{d=JSON.parse(t)}catch(e){if(tries<1&&/Load|FreeSlots/.test(fn))return call(fn,args,tries+1);throw new Error('Google is busy — please try again')}if(!d.ok)throw new Error(d.error||'Error');return d.data})}
+function run(fn,args,ok){toast('Working…');call(fn,args).then(function(d){if(d&&d.bookings){D=d;render()}toast('Done ✓');ok&&ok(d)}).catch(function(e){toast('⚠ '+e.message)})}
+function login(){PIN=$('#pin').value;$('#lerr').textContent='Opening…';call('adminLoad',[]).then(function(d){D=d;try{sessionStorage.pin=PIN}catch(e){}$('#login').classList.add('hide');$('#nav').classList.remove('hide');$('#app').classList.remove('hide');render()}).catch(function(e){$('#lerr').textContent=e.message})}
+function load(){if(PIN)run('adminLoad',[])}
+try{if(sessionStorage.pin){$('#pin').value=sessionStorage.pin;login()}}catch(e){}
+function nav(){$('#nav').innerHTML=TABSDEF.map(function(t){return '<button class="'+(t[0]===TAB?'on':'')+'" onclick="TAB=\''+t[0]+'\';render()">'+t[1]+(t[0]==='inbox'&&D.stats.pending?' ('+D.stats.pending+')':'')+'</button>'}).join('')}
+function due(b){return Math.max(0,((b.Status==='Declined'||b.Status==='Cancelled')?0:+b.Total||0)+(+b['Cancel Fee']||0)-(+b['Paid Amount']||0))}
+function wa(p){p=String(p).replace(/\D/g,'');if(p[0]==='0')p='61'+p.slice(1);return 'https://wa.me/'+p}
+function bCard(b,full){
+  var maps='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(b.Pickup);
+  var d=due(b), lic=[b['Licence No'],b['Licence State'],b['Licence Type'],b['Licence Expiry']?'exp '+b['Licence Expiry']:''].filter(String).join(' · ');
+  var expired=b['Licence Expiry']&&b['Licence Expiry']<D.today;
+  var h='<div class="card"><div class="row sp"><h3>'+esc(b.Name)+'</h3><span class="pill '+b.Status+'">'+b.Status+'</span></div>'+
+  '<div class="muted">'+esc(b.Date)+' · '+esc(b.Start)+'–'+esc(b.End)+' ('+b.Hours+'h) · '+esc(b.ID)+'</div>'+
+  '<div style="margin:8px 0">📍 '+esc(b.Pickup)+(b.Dropoff&&b.Dropoff!==b.Pickup?'<br>🏁 '+esc(b.Dropoff):'')+'<br>🪪 '+esc(lic||'no licence given')+(expired?' <b style="color:var(--r)">EXPIRED</b>':'')+
+  (b['Test Centre']||b['Test Date']?'<br>📝 Test: '+esc([b['Test Centre'],b['Test Date'],b['Test Booking Ref']].filter(String).join(' · ')):'')+
+  '<br>💵 '+esc(b.Purchase==='test'?'Test package':b.Purchase==='credit'?'Prepaid credit':b['Lessons Bought']+' lessons @ '+money(b['Unit Price']))+' · travel '+money(b['Travel Fee'])+' ('+b['Travel Min']+' min) · <b>total '+money(b.Total)+'</b>'+(d?' · <b style="color:var(--r)">due '+money(d)+'</b>':' · ✓ paid')+
+  (b['Student Notes']?'<br>💬 '+esc(b['Student Notes']):'')+'</div>'+
+  '<div class="row" style="margin-bottom:6px"><label style="margin:0"><input type="checkbox" style="width:auto" '+(b['Licence Sighted (ID check)']==='Y'?'checked':'')+' onchange="run(\'adminSetFlag\',[\''+b.ID+'\',\'Licence Sighted (ID check)\',this.checked?\'Y\':\'N\'])"> Licence sighted & matches</label>'+
+  '<label style="margin:0"><input type="checkbox" style="width:auto" '+(b['Phone Verified']==='Y'?'checked':'')+' onchange="run(\'adminSetFlag\',[\''+b.ID+'\',\'Phone Verified\',this.checked?\'Y\':\'N\'])"> Phoned & verified</label></div>'+
+  '<div class="row"><a class="btn" href="tel:'+esc(b.Phone)+'">📞</a><a class="btn" target="_blank" href="'+wa(b.Phone)+'">💬</a><a class="btn" target="_blank" href="'+maps+'">🗺 Navigate</a>';
+  if(b.Status==='Pending')h+='<button class="btn b-g" onclick="if(confirm(\'Confirm this lesson? The student will be emailed.\'))run(\'adminConfirm\',[\''+b.ID+'\'])">✓ Confirm</button><button class="btn b-r" onclick="var r=prompt(\'Reason (optional, sent to student)\');if(r!==null)run(\'adminDecline\',[\''+b.ID+'\',r])">✕ Decline</button>';
+  if(b.Status==='Confirmed')h+='<button class="btn" onclick="resched(\''+b.ID+'\')">🔁 Move</button><button class="btn b-r" onclick="cancelB(\''+b.ID+'\')">Cancel</button>';
+  if(d&&b.Status!=='Pending'&&b.Status!=='Declined')h+='<button class="btn b-y" onclick="var a=prompt(\'Amount received\',\''+d+'\');if(a)run(\'adminMarkPaid\',[\''+b.ID+'\',a])">$ Mark paid</button>';
+  h+='</div><div id="rs-'+b.ID+'"></div>';
+  if(b.Status==='Confirmed'||b.Status==='Completed')h+=notesForm(b);
+  if(full&&b.History)h+='<details><summary class="muted">History</summary><pre>'+esc(b.History)+'</pre></details>';
+  if(!b['Licence Sighted (ID check)']&&b.Status==='Confirmed')h+='<div class="warn">⚠ Check the physical learner licence matches '+esc(b.Name)+' before driving off.</div>';
+  return h+'</div>';
+}
+function notesForm(b){var sk={};try{sk=JSON.parse(b.Skills||'{}')}catch(e){}
+  return '<details><summary>📝 Lesson notes & skills</summary><div id="nf-'+b.ID+'">'+SKILLS.map(function(s,i){return '<div class="sk"><span>'+s+'</span><select data-s="'+esc(s)+'"><option value="">–</option>'+[1,2,3,4,5].map(function(n){return '<option '+(+sk[s]===n?'selected':'')+'>'+n+'</option>'}).join('')+'</select></div>'}).join('')+
+  '<label>Notes (what you covered, what to work on)</label><textarea rows="3" data-f="notes">'+esc(b['Lesson Notes'])+'</textarea><label>Areas / route driven</label><input data-f="route" value="'+esc(b['Route / Areas'])+'" placeholder="e.g. Thornton → East Maitland roundabouts → test route">'+
+  '<div class="grid"><div><label>Odometer start</label><input inputmode="numeric" data-f="odoStart" value="'+esc(b['Odometer Start'])+'"></div><div><label>Odometer end</label><input inputmode="numeric" data-f="odoEnd" value="'+esc(b['Odometer End'])+'"></div></div><br>'+
+  '<div class="row"><button class="btn" onclick="saveNotes(\''+b.ID+'\',false)">Save</button><button class="btn b-k" onclick="saveNotes(\''+b.ID+'\',true)">Save & mark completed</button></div></div></details>'}
+function saveNotes(id,complete){var f=$('#nf-'+id),d={skills:{},complete:complete};f.querySelectorAll('[data-s]').forEach(function(s){if(s.value)d.skills[s.dataset.s]=+s.value});f.querySelectorAll('[data-f]').forEach(function(x){d[x.dataset.f]=x.value});run('adminSaveLesson',[id,d])}
+function resched(id){var el=$('#rs-'+id);el.innerHTML='<label>New date</label><input type="date" onchange="loadFree(\''+id+'\',this.value)"><div id="fs-'+id+'"></div>'}
+function loadFree(id,date){var el=$('#fs-'+id);el.innerHTML='<p class="muted">Checking drive times…</p>';call('adminFreeSlots',[id,date]).then(function(s){el.innerHTML=s.length?'<label>Free times (drive-time checked)</label><div class="row">'+s.map(function(t){return '<button class="btn b-y" onclick="if(confirm(\'Move to '+date+' '+t+'? Student will be emailed.\'))run(\'adminReschedule\',[\''+id+'\',\''+date+'\',\''+t+'\'])">'+t+'</button>'}).join('')+'</div>':'<p class="muted">No free times that day.</p>'}).catch(function(e){el.textContent=e.message})}
+function cancelB(id){var w=prompt('Who is cancelling?\n1 = student (fee by notice period)\n2 = instructor (no fee)\n3 = no-show','1');if(!w)return;var who={1:'student',2:'instructor',3:'noshow'}[w];if(!who)return;var r=prompt('Reason (optional, sent to student)')||'';run('adminCancel',[id,who,r])}
+function render(){nav();var h='',B=D.bookings.slice().sort(function(a,b){return (a.Date+a.Start)<(b.Date+b.Start)?-1:1});
+ if(TAB==='inbox'){var p=B.filter(function(b){return b.Status==='Pending'}),t=B.filter(function(b){return b.Date===D.today&&b.Status==='Confirmed'});
+  h='<div class="grid" style="margin-bottom:12px"><div class="stat"><span class="muted">Waiting for you</span><b>'+D.stats.pending+'</b></div><div class="stat"><span class="muted">Upcoming lessons</span><b>'+D.stats.upcoming+'</b></div></div>';
+  h+='<h3>Needs confirming</h3>'+(p.map(function(b){return bCard(b)}).join('')||'<p class="muted">Nothing pending 🎉</p>')+'<h3>Today</h3>'+(t.map(function(b){return bCard(b)}).join('')||'<p class="muted">No lessons today.</p>')}
+ if(TAB==='upcoming'){var u=B.filter(function(b){return b.Date>=D.today&&(b.Status==='Confirmed'||b.Status==='Pending')}),past=B.filter(function(b){return b.Date<D.today||['Completed','Cancelled','Declined','No-show'].indexOf(b.Status)>=0}).reverse().slice(0,40);
+  h='<h3>Upcoming</h3>'+(u.map(function(b){return bCard(b,1)}).join('')||'<p class="muted">None.</p>')+'<h3>Past & closed</h3>'+past.map(function(b){return bCard(b,1)}).join('')}
+ if(TAB==='students'){h='<input placeholder="Search name, phone, licence…" oninput="filt(this.value)" style="margin-bottom:10px">'+D.students.map(function(s){var bk=D.bookings.filter(function(b){return b.Email===s.email});var expired=s.licenceExpiry&&s.licenceExpiry<D.today;
+  return '<div class="card st" data-q="'+esc((s.name+s.phone+s.email+s.licence).toLowerCase())+'"><div class="row sp"><h3>'+esc(s.name)+'</h3><span class="pill">'+s.hoursDone+' hrs done</span></div><div class="muted">'+esc(s.phone)+' · '+esc(s.email)+'</div>'+
+  '<div style="margin:8px 0">🪪 '+esc([s.licence,s.licenceState,s.licenceType].filter(String).join(' · ')||'—')+(s.licenceExpiry?' · exp '+esc(s.licenceExpiry):'')+(expired?' <b style="color:var(--r)">EXPIRED</b>':'')+' · ID '+(s.idVerified?'✓ '+esc(s.idVerified):'<b style="color:var(--r)">not yet checked</b>')+
+  '<br>📝 Test: '+esc([s.testCentre,s.testDate,s.testRef].filter(String).join(' · ')||'not booked yet')+'<br>📘 Logbook credit earned with us: '+s.logbookHours+' hrs (3-for-1 capped at 10 instructor hrs)'+
+  '<br>💰 Paid '+money(s.paid)+' · Owing '+money(s.owed)+' · Prepaid lessons left: '+s.credits+' ('+money(s.prepaidValueLeft)+')</div>'+
+  '<details><summary>Progress summary</summary><pre>'+esc(s.summary||'No lesson notes yet — add notes after each lesson and the summary builds itself.')+'</pre></details>'+
+  '<details><summary>Edit record</summary>'+[['Licence No','licence'],['Licence State','licenceState'],['Licence Type','licenceType'],['Licence Expiry','licenceExpiry'],['Test Centre','testCentre'],['Test Date','testDate'],['Test Booking Ref','testRef'],['DOB','dob'],['Emergency Contact','emergency'],['Flags / Safety Notes','flags']].map(function(f){return '<label>'+f[0]+'</label><input data-k="'+f[0]+'" value="'+esc(s[f[1]])+'">'}).join('')+
+  '<br><button class="btn b-k" onclick="saveSt(this,\''+esc(s.email)+'\')">Save</button></details>'+
+  '<details><summary>Lessons ('+bk.length+')</summary>'+bk.map(function(b){return '<div class="muted">'+b.Date+' '+b.Start+' · '+b.Status+' · '+money(b.Total)+'</div>'}).join('')+'</details></div>'}).join('')}
+ if(TAB==='money'){var s=D.stats;h='<div class="grid"><div class="stat"><span class="muted">Received this month</span><b>'+money(s.paidMonth)+'</b></div><div class="stat"><span class="muted">Received all time</span><b>'+money(s.paidAll)+'</b></div><div class="stat"><span class="muted">Owing to you</span><b>'+money(s.outstanding)+'</b></div><div class="stat"><span class="muted">Confirmed upcoming</span><b>'+money(s.upcomingValue)+'</b></div></div><br>'+
+  '<div class="card"><h3>By student</h3>'+D.students.map(function(x){return '<div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--l)"><span>'+esc(x.name)+'</span><span class="muted">paid '+money(x.paid)+' · owes '+money(x.owed)+' · prepaid left '+money(x.prepaidValueLeft)+'</span></div>'}).join('')+'</div>'+
+  '<div class="card"><h3>Unpaid bookings</h3>'+B.filter(function(b){return due(b)&&b.Status!=='Pending'}).map(function(b){return bCard(b)}).join('')+'</div>'}
+ if(TAB==='new'){h='<div class="card"><h3>Book a lesson for a student (phone booking)</h3><p class="muted">Checks drive times like the website, then confirms immediately and emails the student.</p><div id="nb">'+
+  [['name','Full name'],['email','Email'],['phone','Mobile'],['address','Pick-up address'],['dropoff','Drop-off (blank = same)'],['licence','Licence no.'],['licenceState','Licence state'],['licenceExpiry','Licence expiry (yyyy-mm-dd)'],['date','Date (yyyy-mm-dd)'],['time','Start (HH:MM)'],['hours','Hours (1 or 2)'],['purchase','Lessons bought (1–20, test, credit)'],['notes','Notes']].map(function(f){return '<label>'+f[1]+'</label><input data-n="'+f[0]+'">'}).join('')+
+  '</div><br><button class="btn b-k" onclick="manual()">Book & confirm</button></div>'}
+ if(TAB==='site'){var keys=Object.keys(D.content).sort();h='<div class="card"><h3>Edit the website</h3><p class="muted">Every text, price, photo link and colour on the site. Changes show on the website within about a minute. Prices here also drive the booking quotes.</p><input placeholder="Search…" oninput="filtK(this.value)"></div>'+
+  keys.map(function(k){var v=D.content[k];return '<div class="card kv" data-q="'+esc((k+' '+v).toLowerCase())+'"><label>'+esc(k)+'</label>'+(String(v).length>60?'<textarea rows="3">'+esc(v)+'</textarea>':'<input value="'+esc(v)+'">')+'<br><br><button class="btn b-y" onclick="saveKV(this,\'Content\',\''+esc(k)+'\')">Save</button></div>'}).join('')+
+  '<div class="card"><h3>FAQ (website + chat bot)</h3>'+tableEd('FAQ',D.faq,['Question','Answer','Keywords','Show on website (Y/N)'])+'</div>'}
+ if(TAB==='bot'){var q=D.chat.slice().reverse();h='<div class="card"><h3>Teach the chat assistant</h3><p class="muted">Questions the assistant couldn\'t answer. Type an answer and it learns it (added to FAQ).</p></div>'+
+  q.map(function(c){return '<div class="card"><div class="muted">'+esc(c.Time)+' · bot answered: '+esc(c['Bot Answered?'])+'</div><b>'+esc(c.Question)+'</b>'+(c['Added to FAQ?']==='Y'?'<p>✓ '+esc(c['Your Answer (teach the bot)'])+'</p>':'<textarea rows="2" placeholder="Your answer…"></textarea><input placeholder="keywords (optional, comma separated)"><br><br><button class="btn b-k" onclick="teach(this,'+c._row+')">Teach bot</button>')+'</div>'}).join('')}
+ if(TAB==='hours'){h='<div class="card"><h3>Weekly hours</h3><p class="muted">Use 24-hr time (08:00). Leave blank for days off. Tip: anything you add to your Google Calendar also blocks booking times automatically.</p>'+tableEd('Availability',D.availability,['Day','Start','End'])+'</div><div class="card"><h3>Days off / blocked times</h3>'+tableEd('Blocked',D.blocked,['Date (yyyy-mm-dd)','Start (blank = all day)','End','Reason'],3)+'</div>'}
+ if(TAB==='records'){h='<div class="card"><h3>Legal records (keep 5 years)</h3><p class="muted">NSW requires each student\'s name, address, phone, lesson dates/times and car rego to be kept for at least 5 years. Everything is stored in your Google Sheet — never delete rows.</p><a class="btn b-k" target="_blank" href="'+D.sheetUrl+'">Open records sheet</a></div>'+
+  '<div class="card"><h3>Activity log</h3>'+D.events.slice().reverse().slice(0,150).map(function(e){return '<div class="muted" style="padding:4px 0;border-bottom:1px solid var(--l)">'+esc(e.Time)+' · '+esc(e.Email||'visitor')+' · <b>'+esc(e.Event)+'</b> '+esc(e.Detail)+'</div>'}).join('')+'</div>'}
+ if(TAB==='settings'){h='<div class="card"><h3>Settings</h3><p class="muted">PayID, car rego, emails, notice period. (PIN is changed in the Google Sheet → Settings tab.)</p></div>'+D.settings.map(function(s){return '<div class="card"><label>'+esc(s.Key)+' <span class="muted">— '+esc(s.Notes)+'</span></label><input value="'+esc(s.Value)+'"><br><br><button class="btn b-y" onclick="saveKV(this,\'Settings\',\''+esc(s.Key)+'\')">Save</button></div>'}).join('')}
+ $('#app').innerHTML=h}
+function filt(q){document.querySelectorAll('.st').forEach(function(c){c.style.display=c.dataset.q.indexOf(q.toLowerCase())>=0?'':'none'})}
+function filtK(q){document.querySelectorAll('.kv').forEach(function(c){c.style.display=c.dataset.q.indexOf(q.toLowerCase())>=0?'':'none'})}
+function saveKV(btn,tab,k){var el=btn.parentNode.querySelector('input,textarea');run('adminSaveKV',[tab,k,el.value])}
+function saveSt(btn,email){var o={};btn.parentNode.querySelectorAll('[data-k]').forEach(function(i){o[i.dataset.k]=i.value});run('adminSaveStudent',[email,o])}
+function teach(btn,row){var c=btn.parentNode;run('adminTeach',[row,c.querySelector('textarea').value,c.querySelector('input').value])}
+function manual(){var p={};document.querySelectorAll('#nb [data-n]').forEach(function(i){p[i.dataset.n]=i.value.trim()});p.hours=+p.hours||1;p.purchase=p.purchase||'1';run('adminManualBooking',[p])}
+function tableEd(tab,rows,cols,extra){var id='t-'+tab;var data=rows.map(function(r){return cols.map(function(c){return r[c]||''})});for(var i=0;i<(extra||1);i++)data.push(cols.map(function(){return ''}));
+  return '<div id="'+id+'">'+data.map(function(r){return '<div class="card" style="background:var(--s)">'+r.map(function(v,j){return '<label>'+esc(cols[j])+'</label>'+(String(v).length>50?'<textarea rows="2">'+esc(v)+'</textarea>':'<input value="'+esc(v)+'">')}).join('')+'</div>'}).join('')+'</div><button class="btn b-k" onclick="saveTable(\''+tab+'\','+cols.length+')">Save '+tab+'</button>'}
+function saveTable(tab,n){var rows=[];document.querySelectorAll('#t-'+tab+' > .card').forEach(function(c){rows.push(Array.from(c.querySelectorAll('input,textarea')).map(function(i){return i.value.trim()}))});run('adminSaveTable',[tab,rows])}
+</script>
+</body>
+</html>
